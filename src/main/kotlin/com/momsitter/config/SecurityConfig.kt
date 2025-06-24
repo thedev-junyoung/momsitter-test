@@ -1,5 +1,6 @@
 package com.momsitter.config
 
+import com.momsitter.domain.PasswordEncoder
 import com.momsitter.infrastructure.BCryptPasswordEncoderAdapter
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -8,7 +9,7 @@ import org.springframework.context.annotation.Configuration
 class SecurityConfig {
 
     @Bean
-    fun passwordEncoder(): com.momsitter.domain.PasswordEncoder {
-        return com.momsitter.infrastructure.BCryptPasswordEncoderAdapter()
+    fun passwordEncoder(): PasswordEncoder {
+        return BCryptPasswordEncoderAdapter()
     }
 }

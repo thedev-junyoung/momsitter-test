@@ -3,7 +3,7 @@ package com.momsitter.infrastructure
 import com.momsitter.domain.PasswordEncoder
 import org.mindrot.jbcrypt.BCrypt
 
-class BCryptPasswordEncoderAdapter : com.momsitter.domain.PasswordEncoder {
+class BCryptPasswordEncoderAdapter : PasswordEncoder {
 
     override fun encode(raw: String): String {
         return BCrypt.hashpw(raw, BCrypt.gensalt()) // salt 자동 생성
