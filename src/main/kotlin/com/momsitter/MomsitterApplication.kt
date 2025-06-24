@@ -1,4 +1,4 @@
-package org.example.momsitter
+package com.momsitter
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
