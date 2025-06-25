@@ -1,5 +1,6 @@
 package com.momsitter.domain.user
 
+import com.momsitter.common.BusinessException
 import com.momsitter.domain.child.ChildInfo
 import com.momsitter.domain.sitter.SitterProfileInfo
 import org.assertj.core.api.Assertions.assertThat
@@ -146,4 +147,44 @@ class UserTest {
             assertThat(user.parentProfile).isSameAs(original)
         }
     }
+
+    @Nested
+    @DisplayName("역할(Role) 관련 기능")
+    inner class RoleTest {
+
+        @Test
+        @DisplayName("사용자가 특정 역할을 가지고 있는지 확인할 수 있다")
+        fun `check if user has specific role`() {
+            val user = TestUserFactory.parentOnlyUser()
+
+            val hasParentRole = user.hasRole(UserRoleType.PARENT)
+            val hasSitterRole = user.hasRole(UserRoleType.SITTER)
+
+            assertThat(hasParentRole).isTrue()
+            assertThat(hasSitterRole).isFalse()
+        }
+
+        @Test
+        @DisplayName("새로운 역할을 추가할 수 있다")
+        fun `add new role to user`() {
+            val user = TestUserFactory.parentOnlyUser()
+
+            user.addRole(UserRole.of(user, UserRoleType.SITTER))
+
+            assertThat(user.hasRole(UserRoleType.SITTER)).isTrue()
+        }
+
+        @Test
+        @DisplayName("이미 존재하는 역할을 추가하려고 하면 예외가 발생한다")
+        fun `throw exception when adding duplicate role`() {
+            val user = TestUserFactory.sitterUser()
+
+            val exception = assertThrows<BusinessException> {
+                user.addRole(UserRole.of(user, UserRoleType.SITTER))
+            }
+
+            assertThat(exception.message).contains("이미 해당 역할을 가지고 있습니다.")
+        }
+    }
+
 }

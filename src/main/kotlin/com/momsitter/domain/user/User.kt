@@ -1,5 +1,7 @@
 package com.momsitter.domain.user
 
+import com.momsitter.common.BusinessException
+import com.momsitter.common.ErrorCode
 import com.momsitter.domain.child.ChildInfo
 import com.momsitter.domain.parent.ParentProfile
 import com.momsitter.domain.sitter.SitterProfile
@@ -211,6 +213,28 @@ open class User protected constructor() {
 
     fun isSitter(): Boolean = sitterProfile != null
     fun isParent(): Boolean = parentProfile != null
+
+    fun hasRole(roleType: UserRoleType): Boolean {
+        return roles.contains(roleType)
+    }
+
+    fun addRole(role: UserRole) {
+        if (this.hasRole(role.role)) {
+            throw BusinessException("이미 해당 역할을 가지고 있습니다.", ErrorCode.DUPLICATE_ROLE)
+        }
+        this.roles.add(role.role)
+    }
+
+    fun extendToSitter(minAge: Int, maxAge: Int, introduction: String) {
+        if (this.hasRole(UserRoleType.SITTER)) {
+            throw BusinessException("이미 시터 역할을 가지고 있습니다.", ErrorCode.DUPLICATE_ROLE)
+        }
+
+        val sitterProfile = SitterProfile.of(this, minAge, maxAge, introduction)
+        this.addRole(UserRole.of(this, UserRoleType.SITTER))
+        this.sitterProfile = sitterProfile
+    }
+
 
 }
 
