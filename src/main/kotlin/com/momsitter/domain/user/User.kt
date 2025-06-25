@@ -198,19 +198,6 @@ open class User protected constructor() {
         roles.add(role)
     }
 
-    fun updatePassword(newPassword: String) {
-        this.password = newPassword
-    }
-
-    fun updateProfile(name: String, birthDate: LocalDate, gender: Gender, email: String) {
-        this.name = name
-        this.birthDate = birthDate
-        this.gender = gender
-        this.email = email
-    }
-
-
-
     fun isSitter(): Boolean = sitterProfile != null
     fun isParent(): Boolean = parentProfile != null
 
@@ -223,6 +210,7 @@ open class User protected constructor() {
             throw BusinessException("이미 해당 역할을 가지고 있습니다.", ErrorCode.DUPLICATE_ROLE)
         }
         this.roles.add(role.role)
+        this.activeRole = role.role
     }
 
     fun extendToSitter(minAge: Int, maxAge: Int, introduction: String) {
@@ -235,6 +223,20 @@ open class User protected constructor() {
         this.sitterProfile = sitterProfile
     }
 
+    fun extendToParent(children: List<ChildInfo>) {
+        if (!hasRole(UserRoleType.PARENT)) {
+            this.addRole(UserRole.of(this, UserRoleType.PARENT))
+        }
+
+        if (this.parentProfile == null) {
+            this.parentProfile = ParentProfile.of(this)
+        }
+
+        children.forEach { info ->
+            this.parentProfile!!.addChild(info.name, info.birthDate, info.gender)
+        }
+
+    }
 
 }
 

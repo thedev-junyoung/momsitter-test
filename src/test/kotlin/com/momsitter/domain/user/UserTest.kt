@@ -186,5 +186,80 @@ class UserTest {
             assertThat(exception.message).contains("이미 해당 역할을 가지고 있습니다.")
         }
     }
+    @Nested
+    @DisplayName("시터 역할 확장")
+    inner class ExtendToSitterTest {
+
+        @Test
+        @DisplayName("부모 유저가 시터 역할을 확장할 수 있다")
+        fun `parent user can extend to sitter`() {
+            // given
+            val user = TestUserFactory.parentOnlyUser()
+
+            // when
+            user.extendToSitter(2, 6, "아이를 사랑하는 부모입니다.")
+
+            // then
+            assertThat(user.hasRole(UserRoleType.SITTER)).isTrue()
+            assertThat(user.sitterProfile).isNotNull
+            assertThat(user.sitterProfile!!.minCareAge).isEqualTo(2)
+            assertThat(user.sitterProfile!!.maxCareAge).isEqualTo(6)
+        }
+
+        @Test
+        @DisplayName("이미 시터 역할이 있는 경우 예외가 발생한다")
+        fun `throws when already has sitter role`() {
+            // given
+            val user = TestUserFactory.sitterUser()
+
+            // expect
+            val exception = assertThrows<BusinessException> {
+                user.extendToSitter(1, 3, "또 시터 하겠어요")
+            }
+
+            assertThat(exception.message).contains("이미 시터 역할을 가지고 있습니다.")
+            assertThat(user.activeRole).isEqualTo(UserRoleType.SITTER)
+        }
+    }
+    @Nested
+    @DisplayName("부모 역할 확장")
+    inner class ExtendToParentTest {
+
+        @Test
+        @DisplayName("시터 유저가 부모 역할을 자녀 없이 확장할 수 있다")
+        fun `sitter user can extend to parent without children`() {
+            // given
+            val user = TestUserFactory.sitterUser()
+
+            // when
+            user.extendToParent(emptyList())
+
+            // then
+            assertThat(user.hasRole(UserRoleType.PARENT)).isTrue()
+            assertThat(user.parentProfile).isNotNull
+            assertThat(user.parentProfile!!.children).isEmpty()
+            assertThat(user.activeRole).isEqualTo(UserRoleType.PARENT)
+        }
+
+        @Test
+        @DisplayName("시터 유저가 부모 역할을 자녀와 함께 확장할 수 있다")
+        fun `sitter user can extend to parent with children`() {
+            // given
+            val user = TestUserFactory.sitterUser()
+            val children = listOf(
+                ChildInfo("준호", LocalDate.of(2020, 6, 1), Gender.MALE),
+                ChildInfo("수아", LocalDate.of(2021, 9, 15), Gender.FEMALE)
+            )
+
+            // when
+            user.extendToParent(children)
+
+            // then
+            assertThat(user.hasRole(UserRoleType.PARENT)).isTrue()
+            assertThat(user.parentProfile!!.children).hasSize(2)
+            assertThat(user.parentProfile!!.children.map { it.name }).containsExactly("준호", "수아")
+            assertThat(user.activeRole).isEqualTo(UserRoleType.PARENT)
+        }
+    }
 
 }
