@@ -1,9 +1,9 @@
 package com.momsitter.application.user.validator
 
+import com.momsitter.common.BusinessException
 import com.momsitter.domain.PasswordEncoder
 import com.momsitter.domain.user.*
 import com.momsitter.domain.user.User.Companion.signUpAsParentOnly
-import com.momsitter.domain.user.exceptions.InvalidLoginException
 import io.mockk.every
 import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
@@ -13,6 +13,8 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
 
+
+@DisplayName("로그인 유효성 검사기 테스트")
 class LoginValidatorTest {
 
     private val userRepository = mockk<UserRepository>()
@@ -55,7 +57,7 @@ class LoginValidatorTest {
     fun user_not_found() {
         every { userRepository.findByUsername("unknown") } returns null
 
-        val exception = assertThrows(InvalidLoginException::class.java) {
+        val exception = assertThrows(BusinessException::class.java) {
             loginValidator("unknown", "any")
         }
 
@@ -69,7 +71,7 @@ class LoginValidatorTest {
         every { userRepository.findByUsername("sitter123") } returns user
         every { passwordEncoder.matches("wrong", "encoded-password") } returns false
 
-        val exception = assertThrows(InvalidLoginException::class.java) {
+        val exception = assertThrows(BusinessException::class.java) {
             loginValidator("sitter123", "wrong")
         }
 

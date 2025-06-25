@@ -10,6 +10,14 @@ import org.springframework.web.bind.annotation.RestControllerAdvice
 @RestControllerAdvice
 class GlobalExceptionHandler {
 
+    @ExceptionHandler(BusinessException::class)
+    fun handleBusinessException(e: BusinessException): ResponseEntity<CustomApiResponse<Nothing>> {
+        val errorMessage = e.message ?: "비즈니스 로직 오류가 발생했습니다."
+        return ResponseEntity
+            .status(e.errorCode.status)
+            .body(CustomApiResponse.error(errorMessage))
+    }
+
     @ExceptionHandler(InvalidLoginException::class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     fun handleInvalidLogin(e: InvalidLoginException): ResponseEntity<CustomApiResponse<Nothing>> {
