@@ -1,13 +1,18 @@
 package com.momsitter.application.user.service
 
+import com.momsitter.application.user.dto.ChangePasswordCommand
 import com.momsitter.application.user.dto.command.ExtendToParentCommand
 import com.momsitter.application.user.dto.command.ExtendToSitterCommand
 import com.momsitter.application.user.dto.command.SignUpCommand
 import com.momsitter.application.user.dto.result.SignUpResult
+import com.momsitter.domain.PasswordEncoder
 import com.momsitter.domain.child.ChildInfo
 import com.momsitter.domain.parent.ParentProfileInfo
 import com.momsitter.domain.sitter.SitterProfileInfo
 import com.momsitter.domain.user.Gender
+import com.momsitter.domain.user.User
+import com.momsitter.domain.user.UserRepository
+import com.momsitter.domain.user.UserRoleType
 import com.momsitter.support.TestDataCleaner
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.*
@@ -22,6 +27,12 @@ class UserServiceIntegration(
     private val userService: UserService,
 
     @Autowired
+    private val userRepository: UserRepository,
+
+    @Autowired
+    private val passwordEncoder: PasswordEncoder,
+
+    @Autowired
     private val testDataCleaner: TestDataCleaner
 ) {
     @AfterEach
@@ -31,7 +42,10 @@ class UserServiceIntegration(
             "kimParent86",
             "leeMom0322",
             "wonderfulSitter",
-            "parentKim88"
+            "parentKim88",
+            "pwuser",
+            "updateUser",
+
         ).forEach { testDataCleaner.deleteUserCascade(it) }
     }
 
@@ -301,5 +315,67 @@ class UserServiceIntegration(
         }
     }
 
+    @Nested
+    @DisplayName("유저 정보 수정")
+    inner class UpdateInfoTest{
+
+        @Test
+        @DisplayName("유저 정보 수정이 정상적으로 이루어진다")
+        fun update_user_info_success() {
+            // given
+            val user = User.signUpAsParentOnly(
+                username = "updateUser",
+                password = "pwd123!",
+                name = "기존이름",
+                birthDate = LocalDate.of(1990, 1, 1),
+                gender = Gender.FEMALE,
+                email = "old@example.com",
+                role = UserRoleType.PARENT,
+                activeRole = UserRoleType.PARENT
+            )
+            val saved = userRepository.save(user)
+
+            // when
+            val command = UpdateUserInfoCommand(
+                userId = saved.id,
+                name = "새이름",
+                email = "new@example.com"
+            )
+            userService.updateUserInfo(command)
+
+            // then
+            val updated = userRepository.findById(saved.id).get()
+            assertThat(updated.name).isEqualTo("새이름")
+            assertThat(updated.email).isEqualTo("new@example.com")
+        }
+
+        @Test
+        @DisplayName("비밀번호 변경이 정상적으로 이루어진다")
+        fun change_password_successfully() {
+            val oldPassword = "oldPassword!"
+            // given
+            val user = User.signUpAsParentOnly(
+                username = "pwuser",
+                password = passwordEncoder.encode(oldPassword),
+                name = "비번유저",
+                birthDate = LocalDate.of(1991, 1, 1),
+                gender = Gender.FEMALE,
+                email = "pw@example.com",
+                role = UserRoleType.PARENT,
+                activeRole = UserRoleType.PARENT
+            )
+            val savedUser = userRepository.save(user)
+
+            // when
+            val newPassword = "new456!"
+            userService.changePassword(ChangePasswordCommand.of(savedUser.id, oldPassword ,newPassword) )
+
+            // then
+            val updated = userRepository.findById(savedUser.id).get()
+            assertThat(passwordEncoder.matches(newPassword, updated.password)).isTrue()
+        }
+
+
+    }
 
 }

@@ -67,4 +67,6 @@ class UserController(
         return ResponseEntity.ok(CustomApiResponse.success(ExtendToParentResponse.from(result), "부모 역할 확장 성공"))
     }
 
+
+
 }

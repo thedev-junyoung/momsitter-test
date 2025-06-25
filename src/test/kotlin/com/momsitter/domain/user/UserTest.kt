@@ -262,4 +262,66 @@ class UserTest {
         }
     }
 
+    @Nested
+    @DisplayName("수정 기능")
+    inner class Update{
+
+
+        @Test
+        @DisplayName("사용자 정보를 수정할 수 있다")
+        fun user_can_update() {
+            val user = TestUserFactory.sitterUser()
+            user.updateInfo("수정된 이름", "update@test.com")
+
+            assertThat(user.name).isEqualTo("수정된 이름")
+            assertThat(user.email).isEqualTo("update@test.com")
+        }
+        @Test
+        @DisplayName("email 만 수정도 가능하다")
+        fun user_can_update_email_only(){
+            val user = TestUserFactory.parentOnlyUser()
+            user.updateInfo(null,"updateEmail@test.com")
+            assertThat(user.email).isEqualTo("updateEmail@test.com")
+            assertThat(user.name).isEqualTo(user.name) // 이름은 변경되지 않아야 함
+        }
+
+        @Test
+        @DisplayName("이름만 수정할 수 있다")
+        fun user_can_update_name_only() {
+            val user = TestUserFactory.sitterUser()
+            user.updateInfo("새로운 이름", null)
+
+            assertThat(user.name).isEqualTo("새로운 이름")
+            assertThat(user.email).isEqualTo(user.email) // 이메일은 변경되지 않아야 함
+        }
+
+        @Test
+        @DisplayName("비밀번호를 변경할 수 있다")
+        fun user_can_change_password() {
+            val user = TestUserFactory.sitterUser()
+            val oldPassword = user.password
+            val newPassword = "newSecurePassword123!"
+
+            user.changePassword(newPassword)
+
+            assertThat(user.password).isNotEqualTo(oldPassword) // 비밀번호가 변경되어야 함
+            assertThat(user.password).isEqualTo(newPassword) // 새 비밀번호로 설정되어야 함
+        }
+
+        @Test
+        @DisplayName("비밀번호 변경 시 빈 문자열은 허용되지 않는다")
+        fun user_cannot_change_password_to_blank() {
+            val user = TestUserFactory.sitterUser()
+            val oldPassword = user.password
+
+            val exception = assertThrows<BusinessException> {
+                user.changePassword("")
+            }
+
+            assertThat(exception.message).contains("비밀번호는 빈 문자열일 수 없습니다.")
+            assertThat(user.password).isEqualTo(oldPassword) // 비밀번호는 변경되지 않아야 함
+        }
+
+    }
+
 }

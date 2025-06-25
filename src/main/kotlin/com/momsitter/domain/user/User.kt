@@ -238,5 +238,25 @@ open class User protected constructor() {
 
     }
 
+    fun changePassword(newPassword: String) {
+        if (newPassword.isBlank()) {
+            throw BusinessException("비밀번호는 빈 문자열일 수 없습니다.", ErrorCode.INVALID_PASSWORD)
+        }
+        this.password = newPassword
+    }
+
+    fun updateInfo(name: String?, email: String?) {
+        if (name != null) {
+            if (name.isBlank()) throw BusinessException("이름은 빈 문자열일 수 없습니다.", ErrorCode.INVALID_NAME)
+            this.name = name
+        }
+
+        if (email != null) {
+            if (email.isBlank()) throw BusinessException("이메일은 빈 문자열일 수 없습니다.", ErrorCode.INVALID_EMAIL)
+            this.email = email
+        }
+    }
+
+
 }
 
