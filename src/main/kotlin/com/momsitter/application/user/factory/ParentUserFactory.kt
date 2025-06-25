@@ -1,0 +1,37 @@
+package com.momsitter.application.user.factory
+
+import com.momsitter.application.user.dto.SignUpCommand
+import com.momsitter.domain.user.Role
+import com.momsitter.domain.user.User
+import org.springframework.stereotype.Component
+
+@Component
+class ParentUserFactory : UserFactory {
+    override fun supportedRole(): String = "PARENT"
+
+    override fun create(command: SignUpCommand, encodedPassword: String, role: Role): User {
+        val parentInfo = command.parentInfo
+        return if (parentInfo == null || parentInfo.children.isEmpty()) {
+            User.signUpAsParentOnly(
+                username = command.username,
+                password = encodedPassword,
+                name = command.name,
+                birthDate = command.birthDate,
+                gender = command.gender,
+                email = command.email,
+                role = role
+            )
+        } else {
+            User.signUpAsParentWithChildren(
+                username = command.username,
+                password = encodedPassword,
+                name = command.name,
+                birthDate = command.birthDate,
+                gender = command.gender,
+                email = command.email,
+                role = role,
+                children = parentInfo.children
+            )
+        }
+    }
+}
