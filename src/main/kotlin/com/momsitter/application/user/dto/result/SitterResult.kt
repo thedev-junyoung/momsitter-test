@@ -13,5 +13,16 @@ data class SitterResult(
                 introduction = sitterProfile.introduction
             )
         }
+
+        fun of(
+            minCareAge: Int,
+            maxCareAge: Int,
+            introduction: String
+        ): SitterResult {
+            return SitterResult(
+                careAgeRange = "${minCareAge}세 ~ ${maxCareAge}세",
+                introduction = introduction
+            )
+        }
     }
 }

@@ -15,7 +15,7 @@ import java.time.LocalDateTime
 
 @Entity
 @Table(name = "sitter_profiles")
-open class SitterProfile private constructor() {
+open class SitterProfile protected constructor() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     open var id: Long = 0L
