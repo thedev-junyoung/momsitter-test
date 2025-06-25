@@ -12,7 +12,7 @@ data class SignUpResult(
             return SignUpResult(
                 userId = user.id,
                 username = user.username,
-                role = user.userRoles.first().role.name
+                role = user.roles.first().name
             )
         }
     }

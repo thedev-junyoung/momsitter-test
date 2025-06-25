@@ -1,6 +1,6 @@
     package com.momsitter.application.user
 
-    import com.momsitter.application.UserService
+    import com.momsitter.application.user.service.UserService
     import com.momsitter.application.user.dto.SignUpCommand
     import com.momsitter.application.user.dto.SignUpResult
     import com.momsitter.domain.child.ChildInfo

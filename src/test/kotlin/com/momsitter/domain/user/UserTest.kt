@@ -9,8 +9,6 @@ import java.time.LocalDate
 @DisplayName("User 회원가입 도메인 테스트")
 class UserTest {
 
-    private fun createRole(name: String): Role = Role.of(name)
-
     @Nested
     @DisplayName("시터 회원을 가입하는 경우")
     inner class SignUpSitterUserTest {
@@ -18,7 +16,6 @@ class UserTest {
         @Test
         @DisplayName("자기소개와 케어 연령이 포함된 시터 프로필과 함께 회원을 생성한다")
         fun `creates sitter user with sitter profile`() {
-            val role = createRole("SITTER")
             val sitterInfo = SitterProfileInfo(
                 minCareAge = 3,
                 maxCareAge = 5,
@@ -32,12 +29,11 @@ class UserTest {
                 birthDate = LocalDate.of(1998, 2, 6),
                 gender = Gender.FEMALE,
                 email = "wonderfulPark0206@gmail.com",
-                role = role,
+                role = UserRoleType.SITTER,
                 sitterInfo = sitterInfo
             )
 
             assertThat(user.isSitter()).isTrue()
-            assertThat(user.userRoles.first().role.name).isEqualTo("SITTER")
             assertThat(user.sitterProfile?.minCareAge).isEqualTo(3)
         }
     }
@@ -49,7 +45,6 @@ class UserTest {
         @Test
         @DisplayName("빈 부모 프로필과 역할을 포함한 부모 회원을 생성한다")
         fun `creates parent user with empty parent profile`() {
-            val role = createRole("PARENT")
 
             val user = User.signUpAsParentOnly(
                 username = "kimParent86",
@@ -58,11 +53,10 @@ class UserTest {
                 birthDate = LocalDate.of(1986, 10, 19),
                 gender = Gender.FEMALE,
                 email = "kim86@gmail.com",
-                role = role
+                role = UserRoleType.PARENT
             )
 
             assertThat(user.isParent()).isTrue()
-            assertThat(user.userRoles.first().role.name).isEqualTo("PARENT")
             assertThat(user.parentProfile?.children?.size).isEqualTo(0)
         }
     }
@@ -74,7 +68,6 @@ class UserTest {
         @Test
         @DisplayName("부모 프로필과 자녀 정보를 함께 포함한 회원을 생성한다")
         fun `creates parent user with children`() {
-            val role = createRole("PARENT")
             val children = listOf(
                 ChildInfo(name = "박아기", birthDate = LocalDate.of(2020, 7, 15), gender = Gender.FEMALE),
                 ChildInfo(name = "김아기", birthDate = LocalDate.of(2019, 5, 22), gender = Gender.MALE)
@@ -87,7 +80,7 @@ class UserTest {
                 birthDate = LocalDate.of(1986, 10, 19),
                 gender = Gender.FEMALE,
                 email = "kim86@gmail.com",
-                role = role,
+                role = UserRoleType.PARENT,
                 children = children
             )
 

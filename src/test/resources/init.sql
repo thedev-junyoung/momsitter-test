@@ -2,13 +2,6 @@
 CREATE SCHEMA IF NOT EXISTS momsitter;
 USE momsitter;
 
--- 2. 역할(Role) 테이블
-CREATE TABLE momsitter.roles (
-                                 id BIGINT AUTO_INCREMENT PRIMARY KEY,
-                                 name VARCHAR(255) NOT NULL,
-                                 CONSTRAINT UK_roles_name UNIQUE (name)
-);
-
 -- 3. 사용자(User) 테이블
 CREATE TABLE momsitter.users (
                                  id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -72,18 +65,8 @@ CREATE TABLE momsitter.care_requests (
 
 -- 8. 사용자-역할 매핑 테이블
 CREATE TABLE momsitter.user_roles (
-                                      id BIGINT AUTO_INCREMENT PRIMARY KEY,
                                       user_id BIGINT NOT NULL,
-                                      role_id BIGINT NOT NULL,
-                                      CONSTRAINT FK_user_roles_user FOREIGN KEY (user_id) REFERENCES momsitter.users(id),
-                                      CONSTRAINT FK_user_roles_role FOREIGN KEY (role_id) REFERENCES momsitter.roles(id)
+                                      role VARCHAR(50) NOT NULL,
+                                      PRIMARY KEY (user_id, role),
+                                      FOREIGN KEY (user_id) REFERENCES momsitter.users(id)
 );
-
--- 9. 초기 Role 데이터 삽입 (존재하지 않을 경우만)
-INSERT INTO momsitter.roles (name)
-SELECT * FROM (SELECT 'SITTER') AS tmp
-WHERE NOT EXISTS (SELECT name FROM momsitter.roles WHERE name = 'SITTER');
-
-INSERT INTO momsitter.roles (name)
-SELECT * FROM (SELECT 'PARENT') AS tmp
-WHERE NOT EXISTS (SELECT name FROM momsitter.roles WHERE name = 'PARENT');

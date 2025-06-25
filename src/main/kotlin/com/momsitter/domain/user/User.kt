@@ -4,18 +4,7 @@ import com.momsitter.domain.child.ChildInfo
 import com.momsitter.domain.parent.ParentProfile
 import com.momsitter.domain.sitter.SitterProfile
 import com.momsitter.domain.sitter.SitterProfileInfo
-import jakarta.persistence.CascadeType
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.EnumType
-import jakarta.persistence.Enumerated
-import jakarta.persistence.FetchType
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
-import jakarta.persistence.OneToMany
-import jakarta.persistence.OneToOne
-import jakarta.persistence.Table
+import jakarta.persistence.*
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
 import java.time.LocalDate
@@ -62,8 +51,12 @@ open class User protected constructor() {
     open var updatedAt: LocalDateTime = LocalDateTime.now()
         protected set
 
-    @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = true)
-    open val userRoles: MutableList<UserRole> = mutableListOf()
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "user_roles", joinColumns = [JoinColumn(name = "user_id")])
+    @Column(name = "role")
+    @Enumerated(EnumType.STRING)
+    open val roles: MutableSet<UserRoleType> = mutableSetOf()
+
 
     // 양방향 관계
     @OneToOne(mappedBy = "user", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
@@ -98,7 +91,7 @@ open class User protected constructor() {
             birthDate: LocalDate,
             gender: Gender,
             email: String,
-            role: Role,
+            role: UserRoleType,
             sitterInfo: SitterProfileInfo
         ): User {
             val user = User(
@@ -121,7 +114,7 @@ open class User protected constructor() {
             birthDate: LocalDate,
             gender: Gender,
             email: String,
-            role: Role
+            role: UserRoleType
         ): User {
             val user = User(
                 username = username,
@@ -143,7 +136,7 @@ open class User protected constructor() {
             birthDate: LocalDate,
             gender: Gender,
             email: String,
-            role: Role,
+            role: UserRoleType,
             children: List<ChildInfo>
         ): User {
             val user = User(
@@ -185,10 +178,8 @@ open class User protected constructor() {
         }
     }
 
-    fun assignRole(role: Role) {
-        if (userRoles.none { it.role.name == role.name }) {
-            userRoles.add(UserRole.of(this, role))
-        }
+    fun assignRole(role: UserRoleType) {
+        roles.add(role)
     }
 
     fun updatePassword(newPassword: String) {
@@ -207,8 +198,5 @@ open class User protected constructor() {
     fun isSitter(): Boolean = sitterProfile != null
     fun isParent(): Boolean = parentProfile != null
 
-    fun hasRole(roleName: String): Boolean {
-        return userRoles.any { it.role.name.equals(roleName, ignoreCase = true) }
-    }
 }
 

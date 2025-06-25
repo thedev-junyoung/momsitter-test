@@ -7,4 +7,5 @@ interface UserRepository {
     fun findByUsername(username: String): User?
     fun delete(user: User): Int
     fun findById(userId: Long): User?
+    fun deleteAll() : Int
 }

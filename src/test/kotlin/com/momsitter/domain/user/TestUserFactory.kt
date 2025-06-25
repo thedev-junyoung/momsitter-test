@@ -13,7 +13,7 @@ object TestUserFactory {
             birthDate = LocalDate.of(1986, 10, 19),
             gender = Gender.FEMALE,
             email = "kim86@gmail.com",
-            role = Role.of("PARENT")  // 테스트용 더미 Role 객체
+            role = UserRoleType.PARENT
         )
         return user
     }
@@ -26,7 +26,7 @@ object TestUserFactory {
             birthDate = LocalDate.of(1998, 2, 6),
             gender = Gender.FEMALE,
             email = "wonderfulPark0206@gmail.com",
-            role = Role.of("SITTER"),
+            role = UserRoleType.SITTER,
             sitterInfo = SitterProfileInfo(3, 5, "유아교육과를 전공중인 대학생 시터입니다!")
         )
         return user

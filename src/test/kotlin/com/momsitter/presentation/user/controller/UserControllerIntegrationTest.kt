@@ -1,6 +1,7 @@
 package com.momsitter.presentation.user.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.momsitter.domain.user.UserRoleType
 import com.momsitter.presentation.user.dto.*
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName

@@ -2,15 +2,15 @@ package com.momsitter.application.user.factory
 
 import com.momsitter.application.user.dto.SignUpCommand
 import com.momsitter.domain.sitter.SitterProfileInfo
-import com.momsitter.domain.user.Role
 import com.momsitter.domain.user.User
+import com.momsitter.domain.user.UserRoleType
 import org.springframework.stereotype.Component
 
 @Component
 class SitterUserFactory : UserFactory {
-    override fun supportedRole(): String = "SITTER"
+    override fun supportedRole(): UserRoleType = UserRoleType.SITTER
 
-    override fun create(command: SignUpCommand, encodedPassword: String, role: Role): User {
+    override fun create(command: SignUpCommand, encodedPassword: String, role: UserRoleType): User {
         val sitterInfo = command.sitterInfo
             ?: throw IllegalArgumentException("시터 가입 시 sitterInfo는 필수입니다.")
 

@@ -29,13 +29,22 @@ class UserRepositoryImpl(
     override fun delete(user: User): Int {
         return if (userJpaRepository.existsById(user.id)) {
             userJpaRepository.delete(user)
-            1 // Return 1 to indicate successful deletion
+            1
         } else {
-            0 // Return 0 if the user does not exist
+            0
         }
     }
     override fun findById(userId: Long): User? {
         return userJpaRepository.findById(userId).orElse(null)
+    }
+
+    override fun deleteAll(): Int {
+        return if (userJpaRepository.count() > 0) {
+            userJpaRepository.deleteAll()
+            1
+        } else {
+            0
+        }
     }
 
 }
