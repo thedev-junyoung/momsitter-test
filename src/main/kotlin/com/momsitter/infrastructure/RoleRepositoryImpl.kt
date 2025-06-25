@@ -12,4 +12,12 @@ class RoleRepositoryImpl(
     override fun findByName(uppercase: String): Role? {
         return roleJpaRepository.findByName(uppercase)
     }
+
+    override fun existsByName(roleName: String): Boolean {
+        return roleJpaRepository.existsByName(roleName)
+    }
+
+    override fun save(role: Role): Role {
+        return roleJpaRepository.save(role)
+    }
 }

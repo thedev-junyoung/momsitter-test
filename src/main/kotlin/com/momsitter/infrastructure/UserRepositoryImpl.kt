@@ -34,4 +34,8 @@ class UserRepositoryImpl(
             0 // Return 0 if the user does not exist
         }
     }
+    override fun findById(userId: Long): User? {
+        return userJpaRepository.findById(userId).orElse(null)
+    }
+
 }

@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository
 @Repository
 interface RoleJpaRepository : JpaRepository<Role, Long> {
     fun findByName(name: String): Role?
+    fun existsByName(roleName: String): Boolean
 }

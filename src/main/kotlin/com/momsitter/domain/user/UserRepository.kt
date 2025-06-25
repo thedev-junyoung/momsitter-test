@@ -6,4 +6,5 @@ interface UserRepository {
     fun existsByEmail(email: String): Boolean
     fun findByUsername(username: String): User?
     fun delete(user: User): Int
+    fun findById(userId: Long): User?
 }
