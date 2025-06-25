@@ -3,8 +3,8 @@ package com.momsitter.presentation.user.controller
 import com.momsitter.application.user.dto.command.LoginCommand
 import com.momsitter.application.user.service.LoginService
 import com.momsitter.common.CustomApiResponse
-import com.momsitter.presentation.user.dto.LoginRequest
-import com.momsitter.presentation.user.dto.LoginResponse
+import com.momsitter.presentation.user.dto.request.LoginRequest
+import com.momsitter.presentation.user.dto.response.LoginResponse
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody

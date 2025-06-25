@@ -4,7 +4,7 @@ import com.momsitter.domain.child.ChildInfo
 import com.momsitter.domain.parent.ParentProfileInfo
 import com.momsitter.domain.sitter.SitterProfileInfo
 import com.momsitter.domain.user.Gender
-import com.momsitter.presentation.user.dto.SignupRequest
+import com.momsitter.presentation.user.dto.request.SignupRequest
 import java.time.LocalDate
 
 data class SignUpCommand(

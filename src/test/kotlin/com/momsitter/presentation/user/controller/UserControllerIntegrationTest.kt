@@ -3,7 +3,7 @@ package com.momsitter.presentation.user.controller
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.momsitter.common.ErrorCode
 import com.momsitter.domain.user.Gender
-import com.momsitter.presentation.user.dto.*
+import com.momsitter.presentation.user.dto.request.*
 import com.momsitter.support.TestDataCleaner
 import com.momsitter.support.TestLoginHelper
 import org.assertj.core.api.Assertions.assertThat

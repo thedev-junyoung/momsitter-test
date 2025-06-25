@@ -1,7 +1,7 @@
 package com.momsitter.presentation.user.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.momsitter.presentation.user.dto.LoginRequest
+import com.momsitter.presentation.user.dto.request.LoginRequest
 import com.momsitter.support.TestDataCleaner
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach

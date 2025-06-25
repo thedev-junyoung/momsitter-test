@@ -1,4 +1,4 @@
-package com.momsitter.presentation.user.dto
+package com.momsitter.presentation.user.dto.response
 
 import com.momsitter.application.user.dto.result.ExtendToSitterResult
 import io.swagger.v3.oas.annotations.media.Schema

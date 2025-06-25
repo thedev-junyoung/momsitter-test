@@ -1,4 +1,4 @@
-package com.momsitter.presentation.user.dto
+package com.momsitter.presentation.user.dto.response
 
 import com.momsitter.application.user.dto.result.*
 import com.momsitter.domain.care.CareRequestStatus
