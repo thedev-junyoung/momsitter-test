@@ -43,6 +43,10 @@ open class User protected constructor() {
     open var email: String = ""
         protected set
 
+    @Column(nullable = false)
+    open var activeRole : UserRoleType = UserRoleType.DEFAULT
+        protected set
+
     @CreationTimestamp
     open var createdAt: LocalDateTime? = null
         protected set
@@ -73,7 +77,8 @@ open class User protected constructor() {
         name: String,
         birthDate: LocalDate,
         gender: Gender,
-        email: String
+        email: String,
+        activeRole: UserRoleType
     ) : this() {
         this.username = username
         this.password = password
@@ -81,6 +86,7 @@ open class User protected constructor() {
         this.birthDate = birthDate
         this.gender = gender
         this.email = email
+        this.activeRole = activeRole
     }
 
     companion object {
@@ -91,6 +97,7 @@ open class User protected constructor() {
             birthDate: LocalDate,
             gender: Gender,
             email: String,
+            activeRole: UserRoleType,
             role: UserRoleType,
             sitterInfo: SitterProfileInfo
         ): User {
@@ -100,7 +107,8 @@ open class User protected constructor() {
                 name = name,
                 birthDate = birthDate,
                 gender = gender,
-                email = email
+                email = email,
+                activeRole = activeRole
             )
             user.assignRole(role)
             user.becomeSitter(sitterInfo.minCareAge, sitterInfo.maxCareAge, sitterInfo.introduction)
@@ -114,6 +122,7 @@ open class User protected constructor() {
             birthDate: LocalDate,
             gender: Gender,
             email: String,
+            activeRole: UserRoleType,
             role: UserRoleType
         ): User {
             val user = User(
@@ -122,7 +131,8 @@ open class User protected constructor() {
                 name = name,
                 birthDate = birthDate,
                 gender = gender,
-                email = email
+                email = email,
+                activeRole = activeRole
             )
             user.assignRole(role)
             user.becomeParent()
@@ -137,6 +147,7 @@ open class User protected constructor() {
             gender: Gender,
             email: String,
             role: UserRoleType,
+            activeRole: UserRoleType,
             children: List<ChildInfo>
         ): User {
             val user = User(
@@ -145,7 +156,9 @@ open class User protected constructor() {
                 name = name,
                 birthDate = birthDate,
                 gender = gender,
-                email = email
+                email = email,
+                activeRole = activeRole
+
             )
             user.assignRole(role)
             user.becomeParent()
@@ -161,7 +174,8 @@ open class User protected constructor() {
             name = "dummy",
             birthDate = LocalDate.now(),
             gender = Gender.MALE,
-            email = "dummy@dummy.com"
+            email = "dummy@dummy.com",
+            activeRole = UserRoleType.DEFAULT
         )
     }
 
