@@ -44,7 +44,8 @@ class LoginServiceIntegrationTest {
                 birthDate = LocalDate.of(1995, 5, 5),
                 gender = Gender.FEMALE,
                 email = "login@example.com",
-                role = UserRoleType.PARENT
+                role = UserRoleType.PARENT,
+                activeRole = UserRoleType.PARENT
             )
         )
 
