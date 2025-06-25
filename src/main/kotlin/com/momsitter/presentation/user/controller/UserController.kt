@@ -5,8 +5,10 @@ import com.momsitter.application.user.service.UserService
 import com.momsitter.application.user.dto.SignUpCommand
 import com.momsitter.application.user.dto.SignUpResult
 import com.momsitter.common.CustomApiResponse
+import com.momsitter.presentation.user.dto.MyInfoResponse
 import com.momsitter.presentation.user.dto.SignupRequest
 import com.momsitter.presentation.user.dto.SignupResponse
+import jakarta.servlet.http.HttpServletRequest
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
@@ -27,5 +29,12 @@ class UserController(
                 "회원가입 성공"
             )
         )
+    }
+
+    @GetMapping("/me")
+    override fun getMyInfo(request: HttpServletRequest): ResponseEntity<CustomApiResponse<MyInfoResponse>> {
+        val userId = request.getAttribute("userId") as Long
+        val user = userService.getMyInfo(userId)
+        return ResponseEntity.ok(CustomApiResponse.success(MyInfoResponse.from(user)))
     }
 }
