@@ -17,4 +17,8 @@ class CareRequestRepositoryImpl(
     override fun findById(id: Long): Optional<CareRequest> {
         return careRequestJpaRepository.findById(id)
     }
+
+    override fun findWithParentAndUserById(requestId: Long): Optional<CareRequest> {
+        return careRequestJpaRepository.findWithParentAndUserById(requestId)
+    }
 }

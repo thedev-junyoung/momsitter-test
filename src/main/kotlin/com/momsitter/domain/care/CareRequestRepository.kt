@@ -5,4 +5,5 @@ import java.util.Optional
 interface CareRequestRepository {
     fun save(request: CareRequest): CareRequest
     fun findById(id: Long): Optional<CareRequest>
+    fun findWithParentAndUserById(requestId: Long): Optional<CareRequest>
 }
