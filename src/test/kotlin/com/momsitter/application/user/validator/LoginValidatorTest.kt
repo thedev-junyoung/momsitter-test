@@ -1,11 +1,8 @@
 package com.momsitter.application.user.validator
 
 import com.momsitter.domain.PasswordEncoder
-import com.momsitter.domain.user.Gender
-import com.momsitter.domain.user.Role
-import com.momsitter.domain.user.User
+import com.momsitter.domain.user.*
 import com.momsitter.domain.user.User.Companion.signUpAsParentOnly
-import com.momsitter.domain.user.UserRepository
 import com.momsitter.domain.user.exceptions.InvalidLoginException
 import io.mockk.every
 import io.mockk.mockk
@@ -37,7 +34,7 @@ class LoginValidatorTest {
             birthDate = LocalDate.of(1990, 1, 1),
             gender = Gender.FEMALE,
             email = "test@example.com",
-            role = Role.of("PARENT")
+            role = UserRoleType.PARENT
         )
     }
 
