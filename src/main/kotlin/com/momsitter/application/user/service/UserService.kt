@@ -1,7 +1,11 @@
 package com.momsitter.application.user.service
 
+import com.momsitter.application.user.dto.command.ExtendToParentCommand
+import com.momsitter.application.user.dto.command.ExtendToSitterCommand
 import com.momsitter.application.user.dto.result.MyInfoResult
 import com.momsitter.application.user.dto.command.SignUpCommand
+import com.momsitter.application.user.dto.result.ExtendToParentResult
+import com.momsitter.application.user.dto.result.ExtendToSitterResult
 import com.momsitter.application.user.dto.result.SignUpResult
 import com.momsitter.application.user.factory.UserFactoryResolver
 import com.momsitter.application.user.validator.SignUpValidator
@@ -59,6 +63,34 @@ class UserService (
     // 유저 정보 수정(Token 기반)
     // 사용자는 회원가입시 제출한 정보를 수정할 수 있어야 합니다.
     // 이 API 는 인증토큰을 이용한 사용자 인증 과정이 있어야 합니다.
+
+    // 시터로 확장하기
+    @Transactional
+    fun extendToSitter(command: ExtendToSitterCommand): ExtendToSitterResult {
+        val user = userRepository.findById(command.userId)
+            .orElseThrow { BusinessException("존재하지 않는 사용자입니다.", ErrorCode.USER_NOT_FOUND) }
+
+        user.extendToSitter(
+            minAge = command.minCareAge,
+            maxAge = command.maxCareAge,
+            introduction = command.introduction
+        )
+
+        return ExtendToSitterResult.from(user)
+    }
+
+    // 부모로 확장하기
+    @Transactional
+    fun extendToParent(command: ExtendToParentCommand): ExtendToParentResult {
+        val user = userRepository.findById(command.userId)
+            .orElseThrow { BusinessException("존재하지 않는 사용자입니다.", ErrorCode.USER_NOT_FOUND) }
+
+        val children = command.children ?: emptyList()
+        user.extendToParent(children)
+
+        return ExtendToParentResult.from(user)
+    }
+
 
 
 }
