@@ -23,7 +23,8 @@ class UserController(
 
         return ResponseEntity.ok(
             CustomApiResponse.success(
-                SignupResponse(result.userId, result.username, result.role)
+                SignupResponse(result.userId, result.username, result.role),
+                "회원가입 성공"
             )
         )
     }
