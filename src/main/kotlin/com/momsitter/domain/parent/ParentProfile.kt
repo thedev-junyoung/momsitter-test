@@ -1,7 +1,6 @@
 package com.momsitter.domain.parent
 
 import com.momsitter.domain.care.CareRequest
-import com.momsitter.domain.care.CareRequestStatus
 import com.momsitter.domain.child.Child
 import com.momsitter.domain.user.Gender
 import com.momsitter.domain.user.User

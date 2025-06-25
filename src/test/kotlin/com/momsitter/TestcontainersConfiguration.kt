@@ -2,7 +2,6 @@ package com.momsitter
 
 import jakarta.annotation.PreDestroy
 import org.springframework.context.annotation.Configuration
-import org.springframework.test.context.ActiveProfiles
 import org.testcontainers.containers.MySQLContainer
 import org.testcontainers.utility.DockerImageName
 

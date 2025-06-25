@@ -1,6 +1,5 @@
 package com.momsitter.infrastructure
 
-import com.momsitter.domain.sitter.SitterProfile
 import com.momsitter.domain.sitter.SitterProfileRepository
 import com.momsitter.domain.user.User
 import com.momsitter.infrastructure.jpa.SitterProfileJpaRepository
