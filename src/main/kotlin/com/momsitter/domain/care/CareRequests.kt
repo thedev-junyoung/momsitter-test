@@ -18,7 +18,7 @@ import java.time.LocalDateTime
 
 @Entity
 @Table(name = "care_requests")
-open class CareRequest private constructor() {
+open class CareRequest protected constructor() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     open var id: Long = 0L
