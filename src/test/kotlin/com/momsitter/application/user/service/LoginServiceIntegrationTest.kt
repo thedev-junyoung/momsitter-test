@@ -5,6 +5,7 @@ import com.momsitter.domain.PasswordEncoder
 import com.momsitter.domain.user.*
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -32,6 +33,7 @@ class LoginServiceIntegrationTest {
     }
 
     @Test
+    @DisplayName("로그인 성공 - DB에서 사용자 정보 조회 후 비밀번호 검증")
     fun login_success_from_db() {
         val rawPassword = "test1234!"
         val encoded = passwordEncoder.encode(rawPassword)

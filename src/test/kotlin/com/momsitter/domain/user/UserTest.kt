@@ -16,7 +16,7 @@ class UserTest {
 
         @Test
         @DisplayName("자기소개와 케어 연령이 포함된 시터 프로필과 함께 회원을 생성한다")
-        fun `creates sitter user with sitter profile`() {
+        fun create_sitter_user_with_profile() {
             val sitterInfo = SitterProfileInfo(
                 minCareAge = 3,
                 maxCareAge = 5,
@@ -46,7 +46,7 @@ class UserTest {
 
         @Test
         @DisplayName("빈 부모 프로필과 역할을 포함한 부모 회원을 생성한다")
-        fun `creates parent user with empty parent profile`() {
+        fun create_parent_user_without_children() {
 
             val user = User.signUpAsParentOnly(
                 username = "kimParent86",
@@ -70,7 +70,7 @@ class UserTest {
 
         @Test
         @DisplayName("부모 프로필과 자녀 정보를 함께 포함한 회원을 생성한다")
-        fun `creates parent user with children`() {
+        fun create_parent_user_with_children() {
             val children = listOf(
                 ChildInfo(name = "박아기", birthDate = LocalDate.of(2020, 7, 15), gender = Gender.FEMALE),
                 ChildInfo(name = "김아기", birthDate = LocalDate.of(2019, 5, 22), gender = Gender.MALE)
@@ -100,7 +100,7 @@ class UserTest {
 
         @Test
         @DisplayName("시터 프로필이 없을 경우 새로 생성된다")
-        fun `creates sitter profile if not present`() {
+        fun create_sitter_profile_if_not_present() {
             val user = TestUserFactory.parentOnlyUser()
 
             user.becomeSitter(3, 5, "소개")
@@ -111,7 +111,7 @@ class UserTest {
 
         @Test
         @DisplayName("이미 시터 프로필이 존재하면 생성하지 않는다")
-        fun `does not overwrite existing sitter profile`() {
+        fun create_sitter_profile_if_already_exists() {
             val user = TestUserFactory.sitterUser()
             val original = user.sitterProfile
 
@@ -127,7 +127,7 @@ class UserTest {
 
         @Test
         @DisplayName("부모 프로필이 없을 경우 새로 생성된다")
-        fun `creates parent profile if not present`() {
+        fun create_parent_profile_if_not_present() {
             val user = TestUserFactory.parentOnlyUser()
 
             user.becomeParent()
@@ -137,7 +137,7 @@ class UserTest {
 
         @Test
         @DisplayName("이미 부모 프로필이 존재하면 생성하지 않는다")
-        fun `does not overwrite existing parent profile`() {
+        fun do_not_create_parent_profile_if_already_exists() {
             val user = TestUserFactory.parentOnlyUser()
             user.becomeParent()
             val original = user.parentProfile
@@ -154,7 +154,7 @@ class UserTest {
 
         @Test
         @DisplayName("사용자가 특정 역할을 가지고 있는지 확인할 수 있다")
-        fun `check if user has specific role`() {
+        fun check_user_role() {
             val user = TestUserFactory.parentOnlyUser()
 
             val hasParentRole = user.hasRole(UserRoleType.PARENT)
@@ -166,7 +166,7 @@ class UserTest {
 
         @Test
         @DisplayName("새로운 역할을 추가할 수 있다")
-        fun `add new role to user`() {
+        fun add_role() {
             val user = TestUserFactory.parentOnlyUser()
 
             user.addRole(UserRole.of(user, UserRoleType.SITTER))
@@ -176,7 +176,7 @@ class UserTest {
 
         @Test
         @DisplayName("이미 존재하는 역할을 추가하려고 하면 예외가 발생한다")
-        fun `throw exception when adding duplicate role`() {
+        fun throws_exception_when_role_already_exists() {
             val user = TestUserFactory.sitterUser()
 
             val exception = assertThrows<BusinessException> {
@@ -192,7 +192,7 @@ class UserTest {
 
         @Test
         @DisplayName("부모 유저가 시터 역할을 확장할 수 있다")
-        fun `parent user can extend to sitter`() {
+        fun parent_user_can_extend_to_sitter() {
             // given
             val user = TestUserFactory.parentOnlyUser()
 
@@ -208,7 +208,7 @@ class UserTest {
 
         @Test
         @DisplayName("이미 시터 역할이 있는 경우 예외가 발생한다")
-        fun `throws when already has sitter role`() {
+        fun throws_exception_when_already_sitter() {
             // given
             val user = TestUserFactory.sitterUser()
 
@@ -227,7 +227,7 @@ class UserTest {
 
         @Test
         @DisplayName("시터 유저가 부모 역할을 자녀 없이 확장할 수 있다")
-        fun `sitter user can extend to parent without children`() {
+        fun sitter_user_can_extend_to_parent_without_children() {
             // given
             val user = TestUserFactory.sitterUser()
 
@@ -243,7 +243,7 @@ class UserTest {
 
         @Test
         @DisplayName("시터 유저가 부모 역할을 자녀와 함께 확장할 수 있다")
-        fun `sitter user can extend to parent with children`() {
+        fun sitter_user_can_extend_to_parent_with_children() {
             // given
             val user = TestUserFactory.sitterUser()
             val children = listOf(

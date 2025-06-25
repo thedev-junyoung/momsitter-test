@@ -14,9 +14,26 @@ class JwtAuthenticationFilter(
     private val jwtTokenValidator: JwtTokenValidator
 ) : Filter {
 
+
     override fun doFilter(request: ServletRequest, response: ServletResponse, chain: FilterChain) {
         val httpRequest = request as HttpServletRequest
         val httpResponse = response as HttpServletResponse
+
+        val path = httpRequest.requestURI
+        val method = httpRequest.method
+
+        val isPermit = when {
+            path == "/api/v1/auth/login" -> true
+            path == "/api/v1/users" && method == "POST" -> true
+            path.startsWith("/swagger") || path.startsWith("/v3/api-docs") -> true
+            else -> false
+        }
+
+
+        if (isPermit) {
+            chain.doFilter(request, response)
+            return
+        }
 
         val token = extractToken(httpRequest)
 
@@ -24,6 +41,8 @@ class JwtAuthenticationFilter(
             // 인증 실패 → 401 반환 후 필터 체인 종료
             httpResponse.status = HttpServletResponse.SC_UNAUTHORIZED
             httpResponse.contentType = "application/json"
+            httpResponse.characterEncoding = "UTF-8"
+            httpResponse.contentType = "application/json;charset=UTF-8"
             httpResponse.writer.write("""{"status":"UNAUTHORIZED","message":"유효하지 않은 토큰입니다."}""")
             return
         }

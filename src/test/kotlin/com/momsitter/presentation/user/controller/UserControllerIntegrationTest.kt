@@ -2,9 +2,9 @@ package com.momsitter.presentation.user.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.momsitter.domain.user.Gender
-import com.momsitter.domain.user.UserRoleType
 import com.momsitter.presentation.user.dto.*
 import com.momsitter.support.TestDataCleaner
+import com.momsitter.support.TestLoginHelper
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.DisplayName
@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.post
@@ -20,6 +21,7 @@ import java.time.LocalDate
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@Import(TestLoginHelper::class)
 class UserControllerIntegrationTest {
 
 
@@ -31,6 +33,9 @@ class UserControllerIntegrationTest {
 
     @Autowired
     lateinit var testDataCleaner: TestDataCleaner
+
+    @Autowired
+    lateinit var testLoginHelper: TestLoginHelper
 
     @AfterEach
     fun cleanUp() {
@@ -205,6 +210,7 @@ class UserControllerIntegrationTest {
             val result = mockMvc.post("/api/v1/users/extend-role/sitter") {
                 contentType = MediaType.APPLICATION_JSON
                 content = objectMapper.writeValueAsString(extendRequest)
+                header("Authorization", "Bearer ${testLoginHelper.getAccessToken("parentToSitter", "pass123!")}")
                 requestAttr("userId", userId)
             }.andExpect {
                 status { isOk() }
@@ -256,7 +262,7 @@ class UserControllerIntegrationTest {
             val result = mockMvc.post("/api/v1/users/extend-role/parent") {
                 contentType = MediaType.APPLICATION_JSON
                 content = objectMapper.writeValueAsString(extendRequest)
-                requestAttr("userId", userId)
+                header("Authorization", "Bearer ${testLoginHelper.getAccessToken("sitterToParent", "pass456!")}")
             }.andExpect {
                 status { isOk() }
             }.andReturn()
@@ -299,8 +305,9 @@ class UserControllerIntegrationTest {
 
             // when
             val extendRequest = ExtendToParentRequest(children = null)
-
+            val token = testLoginHelper.getAccessToken("sitterNoChild", "nochild123!")
             val result = mockMvc.post("/api/v1/users/extend-role/parent") {
+                header("Authorization", "Bearer $token")
                 contentType = MediaType.APPLICATION_JSON
                 content = objectMapper.writeValueAsString(extendRequest)
                 requestAttr("userId", userId)
