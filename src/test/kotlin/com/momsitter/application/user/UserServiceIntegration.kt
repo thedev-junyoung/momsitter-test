@@ -25,10 +25,13 @@
     ) {
         @AfterEach
         fun cleanUp() {
-            // 테스트에서 사용한 username으로 조회 후 삭제
-            testDataCleaner.deleteUserCascade("wonderfulPark0206")
-            testDataCleaner.deleteUserCascade("kimParent86")
-            testDataCleaner.deleteUserCascade("kimParent86")
+            listOf(
+                "wonderfulPark0206",
+                "kimParent86",
+                "leeMom0322",
+                "wonderfulSitter",
+                "parentKim88"
+            ).forEach { testDataCleaner.deleteUserCascade(it) }
         }
 
 
@@ -117,6 +120,72 @@
                 // then
                 assertThat(result.username).isEqualTo("leeMom0322")
                 assertThat(result.role).isEqualTo("PARENT")
+            }
+        }
+
+        @Nested
+        @DisplayName("내 정보 조회")
+        inner class GetMyInfo {
+
+            @Test
+            @DisplayName("시터 역할의 유저는 시터 정보가 포함된 MyInfoResult가 반환된다")
+            fun getMyInfoForSitter() {
+                // given
+                val signUpResult = userService.signup(
+                    SignUpCommand(
+                        username = "wonderfulSitter",
+                        rawPassword = "sitter123!",
+                        name = "시터김",
+                        birthDate = LocalDate.of(1995, 8, 15),
+                        gender = Gender.FEMALE,
+                        email = "sitter@example.com",
+                        roles = "SITTER",
+                        sitterInfo = SitterProfileInfo.of(3, 6, "아이들을 좋아하는 시터입니다."),
+                        parentInfo = null
+                    )
+                )
+
+                // when
+                val myInfo = userService.getMyInfo(signUpResult.userId)
+
+                // then
+                assertThat(myInfo.userId).isEqualTo(signUpResult.userId)
+                assertThat(myInfo.sitterResult).isNotNull
+                assertThat(myInfo.sitterResult?.careAgeRange).isEqualTo("3세 ~ 6세")
+                assertThat(myInfo.parentResult).isNull()
+            }
+
+            @Test
+            @DisplayName("부모 역할의 유저는 자녀 정보와 신청 정보가 포함된 MyInfoResult가 반환된다")
+            fun getMyInfoForParent() {
+                // given
+                val signUpResult = userService.signup(
+                    SignUpCommand(
+                        username = "parentKim88",
+                        rawPassword = "parentKim!!",
+                        name = "김부모",
+                        birthDate = LocalDate.of(1988, 9, 9),
+                        gender = Gender.MALE,
+                        email = "parent@example.com",
+                        roles = "PARENT",
+                        sitterInfo = null,
+                        parentInfo = ParentProfileInfo.of(
+                            children = listOf(
+                                ChildInfo.of("민서", LocalDate.of(2019, 1, 20), Gender.FEMALE),
+                                ChildInfo.of("지후", LocalDate.of(2021, 6, 14), Gender.MALE)
+                            )
+                        )
+                    )
+                )
+
+                // when
+                val myInfo = userService.getMyInfo(signUpResult.userId)
+
+                // then
+                assertThat(myInfo.userId).isEqualTo(signUpResult.userId)
+                assertThat(myInfo.parentResult).isNotNull
+                assertThat(myInfo.parentResult?.children?.size).isEqualTo(2)
+                assertThat(myInfo.sitterResult).isNull()
             }
         }
     }
