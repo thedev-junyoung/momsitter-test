@@ -1,7 +1,9 @@
 package com.momsitter.presentation.filter
 
+import com.momsitter.domain.user.TestUserFactory
+import com.momsitter.domain.user.UserRepository
 import com.momsitter.infrastructure.jwt.JwtTokenProvider
-import com.momsitter.infrastructure.jwt.JwtProperties
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -23,14 +25,22 @@ class JwtAuthenticationFilterIntegrationTest {
     @Autowired
     lateinit var jwtTokenProvider: JwtTokenProvider
 
-    @Autowired
-    lateinit var jwtProperties: JwtProperties
-
     lateinit var validToken: String
+
+    @Autowired
+    lateinit var userRepository: UserRepository
 
     @BeforeEach
     fun setup() {
-        validToken = jwtTokenProvider.createToken(userId = 1L, username = "testuser")
+        val user = TestUserFactory.sitterUser()
+        val savedUser = userRepository.save(user)
+        validToken = jwtTokenProvider.createToken(userId = savedUser.id, username = savedUser.username)
+    }
+
+    @AfterEach
+    fun tearDown() {
+        userRepository.deleteAll()
+        validToken = ""
     }
 
     @Test
