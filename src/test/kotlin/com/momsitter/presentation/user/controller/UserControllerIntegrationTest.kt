@@ -1,9 +1,12 @@
 package com.momsitter.presentation.user.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.momsitter.domain.user.Gender
 import com.momsitter.domain.user.UserRoleType
 import com.momsitter.presentation.user.dto.*
+import com.momsitter.support.TestDataCleaner
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -19,11 +22,26 @@ import java.time.LocalDate
 @AutoConfigureMockMvc
 class UserControllerIntegrationTest {
 
+
     @Autowired
     lateinit var mockMvc: MockMvc
 
     @Autowired
     lateinit var objectMapper: ObjectMapper
+
+    @Autowired
+    lateinit var testDataCleaner: TestDataCleaner
+
+    @AfterEach
+    fun cleanUp() {
+        listOf(
+            "sitter123", "parent456", "parentNoChild",
+            "parentToSitter", "sitterToParent", "sitterNoChild"
+        ).forEach { username ->
+            testDataCleaner.deleteUserCascade(username)
+        }
+    }
+
 
 
     @Nested
@@ -84,12 +102,12 @@ class UserControllerIntegrationTest {
                         ChildRequest(
                             name = "아기1",
                             birthDate = LocalDate.of(2020, 1, 1),
-                            gender = "FEMALE"
+                            gender = Gender.FEMALE
                         ),
                         ChildRequest(
                             name = "아기2",
                             birthDate = LocalDate.of(2021, 6, 15),
-                            gender = "MALE"
+                            gender = Gender.MALE
                         )
                     )
                 )
@@ -148,6 +166,155 @@ class UserControllerIntegrationTest {
         }
     }
 
+    @Nested
+    @DisplayName("역할 확장")
+    inner class ExtendRole {
+
+        @Test
+        @DisplayName("부모가 시터 역할로 확장 성공")
+        fun extend_parent_to_sitter_success() {
+            // given: 부모 회원가입
+            val signUpRequest = SignupRequest(
+                username = "parentToSitter",
+                password = "pass123!",
+                name = "부모시터전환",
+                birthDate = LocalDate.of(1990, 1, 1),
+                gender = "FEMALE",
+                email = "ptos@example.com",
+                roles = "PARENT",
+                sitter = null,
+                parent = ParentInfoRequest(children = emptyList())
+            )
+
+            val signUpResult = mockMvc.post("/api/v1/users") {
+                contentType = MediaType.APPLICATION_JSON
+                content = objectMapper.writeValueAsString(signUpRequest)
+            }.andExpect {
+                status { isOk() }
+            }.andReturn()
+
+            val userId = objectMapper.readTree(signUpResult.response.contentAsString)["data"]["userId"].asLong()
+
+            // when: 시터 역할 확장
+            val extendRequest = ExtendToSitterRequest(
+                minCareAge = 3,
+                maxCareAge = 6,
+                introduction = "저는 아이들을 좋아합니다."
+            )
+
+            val result = mockMvc.post("/api/v1/users/extend-role/sitter") {
+                contentType = MediaType.APPLICATION_JSON
+                content = objectMapper.writeValueAsString(extendRequest)
+                requestAttr("userId", userId)
+            }.andExpect {
+                status { isOk() }
+            }.andReturn()
+
+            // then
+            val data = objectMapper.readTree(result.response.contentAsString)["data"]
+            assertThat(data["sitterProfile"]).isNotNull
+            assertThat(data["roles"].map { it.asText() }).contains("PARENT", "SITTER")
+        }
+
+        @Test
+        @DisplayName("시터가 부모 역할로 확장 성공 - 자녀 포함")
+        fun extend_sitter_to_parent_with_children() {
+            // given: 시터 회원가입
+            val signUpRequest = SignupRequest(
+                username = "sitterToParent",
+                password = "pass456!",
+                name = "시터부모전환",
+                birthDate = LocalDate.of(1988, 10, 10),
+                gender = "MALE",
+                email = "stop@example.com",
+                roles = "SITTER",
+                sitter = SitterInfoRequest(
+                    minAge = 2,
+                    maxAge = 5,
+                    introduction = "시터로서의 경험이 풍부합니다."
+                ),
+                parent = null
+            )
+
+            val signUpResult = mockMvc.post("/api/v1/users") {
+                contentType = MediaType.APPLICATION_JSON
+                content = objectMapper.writeValueAsString(signUpRequest)
+            }.andExpect {
+                status { isOk() }
+            }.andReturn()
+
+            val userId = objectMapper.readTree(signUpResult.response.contentAsString)["data"]["userId"].asLong()
+
+            // when: 부모 역할 확장
+            val extendRequest = ExtendToParentRequest(
+                children = listOf(
+                    ChildRequest("아기준호", LocalDate.of(2020, 4, 1), Gender.MALE),
+                    ChildRequest("아기수아", LocalDate.of(2021, 9, 15), Gender.FEMALE)
+                )
+            )
+
+            val result = mockMvc.post("/api/v1/users/extend-role/parent") {
+                contentType = MediaType.APPLICATION_JSON
+                content = objectMapper.writeValueAsString(extendRequest)
+                requestAttr("userId", userId)
+            }.andExpect {
+                status { isOk() }
+            }.andReturn()
+
+            // then
+            val data = objectMapper.readTree(result.response.contentAsString)["data"]
+            val children = data["children"]
+            assertThat(children).hasSize(2)
+            assertThat(data["roles"].map { it.asText() }).contains("SITTER", "PARENT")
+        }
+
+        @Test
+        @DisplayName("시터가 부모 역할로 확장 성공 - 자녀 없이")
+        fun extend_sitter_to_parent_without_children() {
+            // given
+            val signUpRequest = SignupRequest(
+                username = "sitterNoChild",
+                password = "nochild123!",
+                name = "무자녀시터",
+                birthDate = LocalDate.of(1983, 12, 25),
+                gender = "FEMALE",
+                email = "noc@example.com",
+                roles = "SITTER",
+                sitter = SitterInfoRequest(
+                    minAge = 1,
+                    maxAge = 4,
+                    introduction = "아이를 정말 좋아해요."
+                ),
+                parent = null
+            )
+
+            val signUpResult = mockMvc.post("/api/v1/users") {
+                contentType = MediaType.APPLICATION_JSON
+                content = objectMapper.writeValueAsString(signUpRequest)
+            }.andExpect {
+                status { isOk() }
+            }.andReturn()
+
+            val userId = objectMapper.readTree(signUpResult.response.contentAsString)["data"]["userId"].asLong()
+
+            // when
+            val extendRequest = ExtendToParentRequest(children = null)
+
+            val result = mockMvc.post("/api/v1/users/extend-role/parent") {
+                contentType = MediaType.APPLICATION_JSON
+                content = objectMapper.writeValueAsString(extendRequest)
+                requestAttr("userId", userId)
+            }.andExpect {
+                status { isOk() }
+            }.andReturn()
+
+            // then
+            val data = objectMapper.readTree(result.response.contentAsString)["data"]
+
+            assertThat(data["children"]).hasSize(0)
+            assertThat(data["roles"].map { it.asText() }).contains("SITTER", "PARENT")
+        }
+    }
 
 
 }

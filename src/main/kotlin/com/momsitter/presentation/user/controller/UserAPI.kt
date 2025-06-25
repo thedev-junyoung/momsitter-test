@@ -1,9 +1,7 @@
 package com.momsitter.presentation.user.controller
 
-import com.momsitter.presentation.user.dto.SignupRequest
-import com.momsitter.presentation.user.dto.SignupResponse
 import com.momsitter.common.CustomApiResponse
-import com.momsitter.presentation.user.dto.MyInfoResponse
+import com.momsitter.presentation.user.dto.*
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.servlet.http.HttpServletRequest
@@ -18,4 +16,17 @@ interface UserAPI {
 
     @Operation(summary = "내 정보 조회", description = "인증된 사용자의 정보를 조회합니다.")
     fun getMyInfo(request: HttpServletRequest): ResponseEntity<CustomApiResponse<MyInfoResponse>>
+
+    @Operation(summary = "부모 → 시터 역할 확장", description = "부모 역할의 사용자가 시터 역할을 추가합니다.")
+    fun extendToSitter(
+        request: HttpServletRequest,
+        @Valid requestDto: ExtendToSitterRequest
+    ): ResponseEntity<CustomApiResponse<ExtendToSitterResponse>>
+
+    @Operation(summary = "시터 → 부모 역할 확장", description = "시터 역할의 사용자가 부모 역할을 추가합니다.")
+    fun extendToParent(
+        request: HttpServletRequest,
+        @Valid requestDto: ExtendToParentRequest
+    ): ResponseEntity<CustomApiResponse<ExtendToParentResponse>>
+
 }
