@@ -30,7 +30,8 @@ class UserTest {
                 gender = Gender.FEMALE,
                 email = "wonderfulPark0206@gmail.com",
                 role = UserRoleType.SITTER,
-                sitterInfo = sitterInfo
+                sitterInfo = sitterInfo,
+                activeRole = UserRoleType.SITTER
             )
 
             assertThat(user.isSitter()).isTrue()
@@ -53,7 +54,8 @@ class UserTest {
                 birthDate = LocalDate.of(1986, 10, 19),
                 gender = Gender.FEMALE,
                 email = "kim86@gmail.com",
-                role = UserRoleType.PARENT
+                role = UserRoleType.PARENT,
+                activeRole = UserRoleType.PARENT
             )
 
             assertThat(user.isParent()).isTrue()
@@ -81,7 +83,8 @@ class UserTest {
                 gender = Gender.FEMALE,
                 email = "kim86@gmail.com",
                 role = UserRoleType.PARENT,
-                children = children
+                children = children,
+                activeRole = UserRoleType.PARENT
             )
 
             assertThat(user.isParent()).isTrue()

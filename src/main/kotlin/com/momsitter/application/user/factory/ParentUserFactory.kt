@@ -19,6 +19,7 @@ class ParentUserFactory : UserFactory {
                 birthDate = command.birthDate,
                 gender = command.gender,
                 email = command.email,
+                activeRole = role,
                 role = role
             )
         } else {
@@ -30,6 +31,7 @@ class ParentUserFactory : UserFactory {
                 gender = command.gender,
                 email = command.email,
                 role = role,
+                activeRole = role,
                 children = parentInfo.children
             )
         }

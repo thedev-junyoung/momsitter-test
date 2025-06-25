@@ -13,6 +13,7 @@ object TestUserFactory {
             birthDate = LocalDate.of(1986, 10, 19),
             gender = Gender.FEMALE,
             email = "kim86@gmail.com",
+            activeRole = UserRoleType.PARENT,
             role = UserRoleType.PARENT
         )
         return user
@@ -27,6 +28,7 @@ object TestUserFactory {
             gender = Gender.FEMALE,
             email = "wonderfulPark0206@gmail.com",
             role = UserRoleType.SITTER,
+            activeRole = UserRoleType.SITTER,
             sitterInfo = SitterProfileInfo(3, 5, "유아교육과를 전공중인 대학생 시터입니다!")
         )
         return user

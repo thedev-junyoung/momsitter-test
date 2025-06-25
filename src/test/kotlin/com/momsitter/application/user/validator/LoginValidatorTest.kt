@@ -36,7 +36,8 @@ class LoginValidatorTest {
             birthDate = LocalDate.of(1990, 1, 1),
             gender = Gender.FEMALE,
             email = "test@example.com",
-            role = UserRoleType.PARENT
+            role = UserRoleType.PARENT,
+            activeRole = UserRoleType.PARENT
         )
     }
 

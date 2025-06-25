@@ -21,6 +21,7 @@ class SitterUserFactory : UserFactory {
             birthDate = command.birthDate,
             gender = command.gender,
             email = command.email,
+            activeRole = role,
             role = role,
             sitterInfo = SitterProfileInfo(
                 minCareAge = sitterInfo.minCareAge,
