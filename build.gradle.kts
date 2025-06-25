@@ -26,7 +26,7 @@ dependencies {
 	implementation("org.mindrot:jbcrypt:0.4")
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 
-	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0")
+	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0")
 
 
 	// Test
