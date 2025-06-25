@@ -26,52 +26,52 @@ import java.time.LocalDateTime
 open class User protected constructor() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long = 0L
-        private set
+    open var id: Long = 0L
+        protected set
 
     @Column(unique = true, nullable = false)
-    var username: String = ""
+    open var username: String = ""
         protected set
 
     @Column(nullable = false)
-    var password: String = ""
+    open var password: String = ""
         protected set
 
     @Column(nullable = false)
-    var name: String = ""
+    open var name: String = ""
         protected set
 
     @Column(nullable = false)
-    var birthDate: LocalDate? = null
+    open var birthDate: LocalDate? = null
         protected set
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    var gender: Gender = Gender.MALE
+    open var gender: Gender = Gender.MALE
         protected set
 
     @Column(unique = true, nullable = false)
-    var email: String = ""
+    open var email: String = ""
         protected set
 
     @CreationTimestamp
-    var createdAt: LocalDateTime? = null
+    open var createdAt: LocalDateTime? = null
         protected set
 
     @UpdateTimestamp
-    var updatedAt: LocalDateTime = LocalDateTime.now()
+    open var updatedAt: LocalDateTime = LocalDateTime.now()
         protected set
 
     @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = true)
-    val userRoles: MutableList<UserRole> = mutableListOf()
+    open val userRoles: MutableList<UserRole> = mutableListOf()
 
     // 양방향 관계
     @OneToOne(mappedBy = "user", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
-    var sitterProfile: SitterProfile? = null
+    open var sitterProfile: SitterProfile? = null
         protected set
 
     @OneToOne(mappedBy = "user", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
-    var parentProfile: ParentProfile? = null
+    open var parentProfile: ParentProfile? = null
         protected set
 
     private constructor(
@@ -162,7 +162,14 @@ open class User protected constructor() {
             }
             return user
         }
-
+        fun dummy(): User = User(
+            username = "dummy",
+            password = "dummy",
+            name = "dummy",
+            birthDate = LocalDate.now(),
+            gender = Gender.MALE,
+            email = "dummy@dummy.com"
+        )
     }
 
     // 비즈니스 메서드
@@ -184,5 +191,24 @@ open class User protected constructor() {
         }
     }
 
+    fun updatePassword(newPassword: String) {
+        this.password = newPassword
+    }
+
+    fun updateProfile(name: String, birthDate: LocalDate, gender: Gender, email: String) {
+        this.name = name
+        this.birthDate = birthDate
+        this.gender = gender
+        this.email = email
+    }
+
+
+
+    fun isSitter(): Boolean = sitterProfile != null
+    fun isParent(): Boolean = parentProfile != null
+
+    fun hasRole(roleName: String): Boolean {
+        return userRoles.any { it.role.name.equals(roleName, ignoreCase = true) }
+    }
 }
 

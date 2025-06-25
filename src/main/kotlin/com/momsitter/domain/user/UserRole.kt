@@ -15,15 +15,15 @@ open class UserRole private constructor(
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long = 0L,
+    open val id: Long = 0L,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    val user: User,
+    open val user: User,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id", nullable = false)
-    val role: Role
+    open val role: Role
 ) {
     companion object {
         fun of(user: User, role: Role): UserRole {
@@ -31,5 +31,8 @@ open class UserRole private constructor(
         }
     }
 
-    protected constructor() : this(0L, user = null!!, role = null!!)
-}
+    protected constructor() : this(
+        id = 0L,
+        user = User.dummy(),
+        role = Role.dummy()
+    )}

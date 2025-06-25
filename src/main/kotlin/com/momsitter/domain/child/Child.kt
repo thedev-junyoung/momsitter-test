@@ -17,37 +17,38 @@ import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.Period
 
 @Entity
 @Table(name = "children")
 open class Child protected constructor() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long = 0L
+    open var id: Long = 0L
         protected set
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_profile_id", nullable = false)
-    var parentProfile: ParentProfile? = null
+    open var parentProfile: ParentProfile? = null
         protected set
 
     @Column(nullable = false)
-    var name: String = "" // 아이 이름
+    open var name: String = "" // 아이 이름
         protected set
 
     @Column(nullable = false)
-    var birthDate: LocalDate = LocalDate.now()
+    open var birthDate: LocalDate = LocalDate.now()
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    var gender: Gender = Gender.MALE
+    open var gender: Gender = Gender.MALE
         protected set
 
     @CreationTimestamp
-    var createdAt: LocalDateTime? = null
+    open var createdAt: LocalDateTime? = null
 
     @UpdateTimestamp
-    var updatedAt: LocalDateTime = LocalDateTime.now()
+    open var updatedAt: LocalDateTime = LocalDateTime.now()
         protected set
 
     private constructor(

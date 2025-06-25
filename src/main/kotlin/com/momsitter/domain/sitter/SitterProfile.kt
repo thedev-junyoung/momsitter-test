@@ -18,32 +18,32 @@ import java.time.LocalDateTime
 open class SitterProfile private constructor() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long = 0L
+    open var id: Long = 0L
         protected set
 
     @OneToOne
     @JoinColumn(name = "user_id", nullable = false, unique = true)
-    var user: User? = null
+    open var user: User? = null
         protected set
 
     @Column(nullable = false)
-    var minCareAge: Int = 0 // 케어 가능한 최소 연령
+    open var minCareAge: Int = 0 // 케어 가능한 최소 연령
         protected set
 
     @Column(nullable = false)
-    var maxCareAge: Int = 0 // 케어 가능한 최대 연령
+    open var maxCareAge: Int = 0 // 케어 가능한 최대 연령
         protected set
 
     @Column(nullable = false, columnDefinition = "TEXT")
-    var introduction: String = "" // 자기소개
+    open var introduction: String = "" // 자기소개
         protected set
 
     @CreationTimestamp
-    var createdAt: LocalDateTime? = null
+    open var createdAt: LocalDateTime? = null
         protected set
 
     @UpdateTimestamp
-    var updatedAt: LocalDateTime = LocalDateTime.now()
+    open var updatedAt: LocalDateTime = LocalDateTime.now()
         protected set
 
     private constructor(

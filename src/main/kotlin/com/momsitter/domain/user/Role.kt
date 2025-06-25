@@ -13,11 +13,12 @@ open class Role private constructor(
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long = 0L,
+    open val id: Long = 0L,
 
     @Column(unique = true, nullable = false)
-    var name: String
+    open var name: String
 ) {
+    protected constructor() : this(0L, "DUMMY")
 
     private constructor(
         name: String
@@ -30,7 +31,9 @@ open class Role private constructor(
             require(name.isNotBlank()) { "역할 이름은 비어 있을 수 없습니다." }
             return Role(name.trim().uppercase())
         }
+        fun dummy(): Role = Role(name = "DUMMY")
+
     }
-    protected constructor() : this(0L, "")
+
 
 }

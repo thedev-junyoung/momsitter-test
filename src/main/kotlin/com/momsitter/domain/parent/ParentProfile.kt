@@ -25,30 +25,30 @@ import java.time.LocalDateTime
 open class ParentProfile protected constructor() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long = 0L
+    open var id: Long = 0L
         protected set
 
     @OneToOne
     @JoinColumn(name = "user_id", nullable = false, unique = true)
-    var user: User? = null
+    open var user: User? = null
         protected set
 
     @CreationTimestamp
-    var createdAt: LocalDateTime? = null
+    open var createdAt: LocalDateTime? = null
         protected set
 
     @UpdateTimestamp
-    var updatedAt: LocalDateTime = LocalDateTime.now()
+    open var updatedAt: LocalDateTime = LocalDateTime.now()
         protected set
 
     // 부모의 아이들
     @OneToMany(mappedBy = "parentProfile", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
-    var children: MutableList<Child> = mutableListOf()
+    open var children: MutableList<Child> = mutableListOf()
         protected set
 
     // 부모의 돌봄 요청들
     @OneToMany(mappedBy = "parentProfile", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
-    var careRequests: MutableList<CareRequest> = mutableListOf()
+    open var careRequests: MutableList<CareRequest> = mutableListOf()
         protected set
 
     private constructor(user: User) : this() {
