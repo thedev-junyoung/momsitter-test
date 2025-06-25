@@ -41,7 +41,7 @@ open class ParentProfile protected constructor() {
         protected set
 
     // 부모의 아이들
-    @OneToMany(mappedBy = "parentProfile", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "parentProfile", cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.LAZY)
     open var children: MutableList<Child> = mutableListOf()
         protected set
 

@@ -63,7 +63,7 @@ open class User protected constructor() {
 
 
     // 양방향 관계
-    @OneToOne(mappedBy = "user", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.LAZY)
     open var sitterProfile: SitterProfile? = null
         protected set
 

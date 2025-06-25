@@ -16,8 +16,8 @@ class TestDataCleaner(
     @Transactional
     fun deleteUserCascade(username: String) {
         userRepository.findByUsername(username)?.let { user ->
-            sitterProfileRepository.deleteByUser(user)
-            parentProfileRepository.deleteByUser(user)
+//            sitterProfileRepository.deleteByUser(user)
+//            parentProfileRepository.deleteByUser(user)
             userRepository.delete(user)
         }
     }
