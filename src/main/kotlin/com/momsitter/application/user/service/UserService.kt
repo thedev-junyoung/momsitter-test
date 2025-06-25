@@ -94,7 +94,7 @@ class UserService (
     fun changePassword(command: ChangePasswordCommand) {
         val user = userValidator.validateUserId(command.userId)
         if (!passwordEncoder.matches(command.oldPassword, user.password)) {
-            throw BusinessException("현재 비밀번호가 일치하지 않습니다.", ErrorCode.INVALID_PASSWORD)
+            throw BusinessException("비밀번호가 일치하지 않습니다.", ErrorCode.INVALID_PASSWORD)
         }
 
         user.changePassword(passwordEncoder.encode(command.newPassword))

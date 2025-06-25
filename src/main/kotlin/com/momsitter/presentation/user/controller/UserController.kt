@@ -1,11 +1,13 @@
 package com.momsitter.presentation.user.controller
 
 
+import com.momsitter.application.user.dto.ChangePasswordCommand
 import com.momsitter.application.user.dto.command.ExtendToParentCommand
 import com.momsitter.application.user.dto.command.ExtendToSitterCommand
 import com.momsitter.application.user.service.UserService
 import com.momsitter.application.user.dto.command.SignUpCommand
 import com.momsitter.application.user.dto.result.SignUpResult
+import com.momsitter.application.user.service.UpdateUserInfoCommand
 import com.momsitter.common.CustomApiResponse
 import com.momsitter.domain.child.ChildInfo
 import com.momsitter.presentation.user.dto.*
@@ -67,6 +69,28 @@ class UserController(
         return ResponseEntity.ok(CustomApiResponse.success(ExtendToParentResponse.from(result), "부모 역할 확장 성공"))
     }
 
+    @PatchMapping("/me/info")
+    override fun updateUserInfo(userId: Long, request: UpdateUserInfoRequest): ResponseEntity<Void> {
+        userService.updateUserInfo(
+            UpdateUserInfoCommand.of(
+                userId = userId,
+                name = request.name,
+                email = request.email
+            )
+        )
+        return ResponseEntity.noContent().build()
+    }
 
+    @PatchMapping("/me/password")
+    override fun changePassword(userId: Long, request: ChangePasswordRequest): ResponseEntity<Void> {
+        userService.changePassword(
+            ChangePasswordCommand.of(
+                userId = userId,
+                oldPassword = request.oldPassword,
+                newPassword = request.newPassword
+            )
+        )
+        return ResponseEntity.noContent().build()
+    }
 
 }

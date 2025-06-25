@@ -6,9 +6,9 @@ data class ChangePasswordCommand(
     val newPassword: String
 ) {
     companion object {
-        fun of(id: Long, oldPassword: String, newPassword: String): ChangePasswordCommand {
+        fun of(userId: Long, oldPassword: String, newPassword: String): ChangePasswordCommand {
             return ChangePasswordCommand(
-                userId = id,
+                userId = userId,
                 oldPassword = oldPassword,
                 newPassword = newPassword
             )

@@ -6,5 +6,10 @@ data class UpdateUserInfoCommand(
     val name: String? = null,
 
 ) {
+    companion object {
+        fun of(userId: Long, name: String?, email: String?): UpdateUserInfoCommand {
+            return UpdateUserInfoCommand(userId = userId, name = name, email = email)
+        }
+    }
 
 }

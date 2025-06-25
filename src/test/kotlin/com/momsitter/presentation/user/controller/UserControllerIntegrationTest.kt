@@ -1,11 +1,13 @@
 package com.momsitter.presentation.user.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.momsitter.common.ErrorCode
 import com.momsitter.domain.user.Gender
 import com.momsitter.presentation.user.dto.*
 import com.momsitter.support.TestDataCleaner
 import com.momsitter.support.TestLoginHelper
 import org.assertj.core.api.Assertions.assertThat
+import org.hamcrest.CoreMatchers.equalTo
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -16,6 +18,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.patch
 import org.springframework.test.web.servlet.post
 import java.time.LocalDate
 
@@ -211,7 +214,6 @@ class UserControllerIntegrationTest {
                 contentType = MediaType.APPLICATION_JSON
                 content = objectMapper.writeValueAsString(extendRequest)
                 header("Authorization", "Bearer ${testLoginHelper.getAccessToken("parentToSitter", "pass123!")}")
-                requestAttr("userId", userId)
             }.andExpect {
                 status { isOk() }
             }.andReturn()
@@ -310,7 +312,6 @@ class UserControllerIntegrationTest {
                 header("Authorization", "Bearer $token")
                 contentType = MediaType.APPLICATION_JSON
                 content = objectMapper.writeValueAsString(extendRequest)
-                requestAttr("userId", userId)
             }.andExpect {
                 status { isOk() }
             }.andReturn()
@@ -323,5 +324,95 @@ class UserControllerIntegrationTest {
         }
     }
 
+    @Nested
+    @DisplayName("유저 정보 수정 및 비밀번호 변경")
+    inner class UpdateUserInfoAndPassword {
+
+        @Test
+        @DisplayName("유저 정보 수정이 정상적으로 이루어진다")
+        fun update_user_info_successfully() {
+            // given
+            val username = "updateUser"
+            val password = "pass123!"
+
+            val userId = testLoginHelper.createAndSaveParentUser(username, password)
+            val token = testLoginHelper.getAccessToken(username, password)
+
+
+            val updateRequest = UpdateUserInfoRequest(
+                name = "변경된이름",
+                email = "updated@example.com"
+            )
+
+            // when
+            val result = mockMvc.patch("/api/v1/users/me/info") {
+                header("Authorization", "Bearer $token")
+                contentType = MediaType.APPLICATION_JSON
+                content = objectMapper.writeValueAsString(updateRequest)
+            }.andExpect {
+                status { isNoContent() }
+            }.andReturn()
+
+            // then
+
+        }
+
+        @Test
+        @DisplayName("비밀번호 변경이 정상적으로 이루어진다")
+        fun change_password_successfully() {
+            // given
+            val username = "pwChangeUser"
+            val oldPassword = "oldPass123!"
+            val userId = testLoginHelper.createAndSaveParentUser(username, oldPassword)
+
+            val token = testLoginHelper.getAccessToken(username, oldPassword)
+            val changePasswordRequest = ChangePasswordRequest(
+                oldPassword = oldPassword,
+                newPassword = "newPass456!"
+            )
+
+            // when
+            mockMvc.patch("/api/v1/users/me/password") {
+                header("Authorization", "Bearer $token")
+                contentType = MediaType.APPLICATION_JSON
+                content = objectMapper.writeValueAsString(changePasswordRequest)
+            }.andExpect {
+                status { isNoContent() }
+            }
+
+            // then: 새로운 비밀번호로 로그인 성공 확인
+            val newToken = testLoginHelper.getAccessToken(username, "newPass456!")
+            assertThat(newToken).isNotBlank()
+        }
+
+
+
+        @Test
+        @DisplayName("비밀번호 변경 시 기존 비밀번호 불일치로 실패")
+        fun change_password_with_wrong_old_password() {
+            // given
+            val username = "wrongPwUser"
+            val correctPassword = "right123!"
+            val wrongPassword = "wrong123!"
+
+            val userId = testLoginHelper.createAndSaveParentUser(username, correctPassword)
+            val token = testLoginHelper.getAccessToken(username, correctPassword)
+
+            val request = ChangePasswordRequest(
+                oldPassword = wrongPassword,
+                newPassword = "new456!"
+            )
+
+            // when
+            mockMvc.patch("/api/v1/users/me/password") {
+                header("Authorization", "Bearer $token")
+                contentType = MediaType.APPLICATION_JSON
+                content = objectMapper.writeValueAsString(request)
+            }.andExpect {
+                status { is4xxClientError() }
+                jsonPath("$.message") { value(equalTo(ErrorCode.INVALID_PASSWORD.message))}
+            }
+        }
+    }
 
 }
