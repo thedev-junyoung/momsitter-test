@@ -1,6 +1,6 @@
 package com.momsitter.application.user.service
 
-import com.momsitter.application.user.dto.LoginCommand
+import com.momsitter.application.user.dto.command.LoginCommand
 import com.momsitter.domain.PasswordEncoder
 import com.momsitter.domain.user.*
 import org.assertj.core.api.Assertions.assertThat

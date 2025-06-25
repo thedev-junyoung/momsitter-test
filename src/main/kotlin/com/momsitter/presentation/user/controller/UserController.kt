@@ -2,8 +2,8 @@ package com.momsitter.presentation.user.controller
 
 
 import com.momsitter.application.user.service.UserService
-import com.momsitter.application.user.dto.SignUpCommand
-import com.momsitter.application.user.dto.SignUpResult
+import com.momsitter.application.user.dto.command.SignUpCommand
+import com.momsitter.application.user.dto.result.SignUpResult
 import com.momsitter.common.CustomApiResponse
 import com.momsitter.presentation.user.dto.MyInfoResponse
 import com.momsitter.presentation.user.dto.SignupRequest

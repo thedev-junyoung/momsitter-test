@@ -1,6 +1,6 @@
 package com.momsitter.presentation.user.dto
 
-import com.momsitter.application.user.dto.*
+import com.momsitter.application.user.dto.result.*
 import com.momsitter.domain.care.CareRequestStatus
 import java.time.LocalDateTime
 

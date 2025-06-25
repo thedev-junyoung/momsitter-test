@@ -1,6 +1,6 @@
 package com.momsitter.presentation.user.controller
 
-import com.momsitter.application.user.dto.LoginCommand
+import com.momsitter.application.user.dto.command.LoginCommand
 import com.momsitter.application.user.service.LoginService
 import com.momsitter.common.CustomApiResponse
 import com.momsitter.presentation.user.dto.LoginRequest

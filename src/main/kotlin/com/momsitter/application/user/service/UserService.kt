@@ -1,8 +1,8 @@
 package com.momsitter.application.user.service
 
-import com.momsitter.application.user.dto.MyInfoResult
-import com.momsitter.application.user.dto.SignUpCommand
-import com.momsitter.application.user.dto.SignUpResult
+import com.momsitter.application.user.dto.result.MyInfoResult
+import com.momsitter.application.user.dto.command.SignUpCommand
+import com.momsitter.application.user.dto.result.SignUpResult
 import com.momsitter.application.user.factory.UserFactoryResolver
 import com.momsitter.application.user.validator.SignUpValidator
 import com.momsitter.common.BusinessException

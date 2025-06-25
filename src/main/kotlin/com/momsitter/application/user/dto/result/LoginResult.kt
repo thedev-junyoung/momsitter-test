@@ -1,4 +1,4 @@
-package com.momsitter.application.user.dto
+package com.momsitter.application.user.dto.result
 
 data class LoginResult(
     val userId: Long,

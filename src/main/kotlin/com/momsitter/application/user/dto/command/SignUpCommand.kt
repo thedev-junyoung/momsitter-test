@@ -1,4 +1,4 @@
-package com.momsitter.application.user.dto
+package com.momsitter.application.user.dto.command
 
 import com.momsitter.domain.child.ChildInfo
 import com.momsitter.domain.parent.ParentProfileInfo

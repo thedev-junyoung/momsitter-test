@@ -1,8 +1,8 @@
     package com.momsitter.application.user
 
     import com.momsitter.application.user.service.UserService
-    import com.momsitter.application.user.dto.SignUpCommand
-    import com.momsitter.application.user.dto.SignUpResult
+    import com.momsitter.application.user.dto.command.SignUpCommand
+    import com.momsitter.application.user.dto.result.SignUpResult
     import com.momsitter.domain.child.ChildInfo
     import com.momsitter.domain.parent.ParentProfileInfo
     import com.momsitter.domain.sitter.SitterProfileInfo

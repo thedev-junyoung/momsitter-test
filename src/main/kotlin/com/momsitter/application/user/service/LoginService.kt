@@ -1,7 +1,7 @@
 package com.momsitter.application.user.service
 
-import com.momsitter.application.user.dto.LoginCommand
-import com.momsitter.application.user.dto.LoginResult
+import com.momsitter.application.user.dto.command.LoginCommand
+import com.momsitter.application.user.dto.result.LoginResult
 import com.momsitter.application.user.validator.LoginValidator
 import com.momsitter.infrastructure.jwt.JwtTokenProvider
 import org.springframework.stereotype.Service

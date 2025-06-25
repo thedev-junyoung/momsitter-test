@@ -1,4 +1,4 @@
-package com.momsitter.application.user.dto
+package com.momsitter.application.user.dto.command
 
 data class LoginCommand(
     val username: String,

@@ -1,6 +1,6 @@
 package com.momsitter.application.user.factory
 
-import com.momsitter.application.user.dto.SignUpCommand
+import com.momsitter.application.user.dto.command.SignUpCommand
 import com.momsitter.domain.sitter.SitterProfileInfo
 import com.momsitter.domain.user.User
 import com.momsitter.domain.user.UserRoleType
