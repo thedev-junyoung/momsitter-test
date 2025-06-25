@@ -27,7 +27,7 @@ data class MyInfoResult(
         parentResult = user.parentProfile?.let {
             ParentResult(
                 children = it.children.map { child ->
-                    ChildResult(child.name, child.birthDate.toString().replace("-", ""), child.gender.name)
+                    ChildResult(child.name, child.birthDate, child.gender.name)
                 },
                 request = it.careRequests.map { req ->
                     CareRequestResult.from(req)

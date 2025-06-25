@@ -2,6 +2,7 @@ package com.momsitter.presentation.user.dto
 
 import com.momsitter.application.user.dto.result.*
 import com.momsitter.domain.care.CareRequestStatus
+import java.time.LocalDate
 import java.time.LocalDateTime
 
 data class MyInfoResponse(
@@ -47,7 +48,7 @@ data class ParentResponse(
     )
 }
 
-data class ChildResponse(val name: String, val birthDate: String, val gender: String) {
+data class ChildResponse(val name: String, val birthDate: LocalDate, val gender: String) {
     constructor(result: ChildResult) : this(
         name = result.name,
         birthDate = result.birthDate,

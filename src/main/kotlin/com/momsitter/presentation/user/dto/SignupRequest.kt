@@ -1,5 +1,6 @@
 package com.momsitter.presentation.user.dto
 
+import com.momsitter.domain.user.Gender
 import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.validation.constraints.*
 import java.time.LocalDate
@@ -69,5 +70,5 @@ data class ChildRequest(
     val birthDate: LocalDate,
 
     @Schema(description = "성별", example = "MALE")
-    val gender: String
+    val gender: Gender
 )

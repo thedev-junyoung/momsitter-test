@@ -35,7 +35,7 @@ data class SignUpCommand(
                 parentInfo = request.parent?.let {
                     ParentProfileInfo.of(
                         it.children.map { child ->
-                            ChildInfo.of(child.name, child.birthDate, Gender.valueOf(child.gender.uppercase()))
+                            ChildInfo.of(child.name, child.birthDate, child.gender)
                         }
                     )
                 }
