@@ -78,13 +78,16 @@ class UserController(
     @PatchMapping("/me/info")
     override fun updateUserInfo(
         request: HttpServletRequest,
-        updateDto: UpdateUserInfoRequest): ResponseEntity<Void> {
+        updateUserDto: UpdateUserInfoRequest
+    ): ResponseEntity<Void> {
         val userId = request.getAttribute("userId") as Long
         userService.updateUserInfo(
             UpdateUserInfoCommand.of(
                 userId = userId,
-                name = updateDto.name,
-                email = updateDto.email
+                name = updateUserDto.name,
+                email = updateUserDto.email,
+                birthDate = updateUserDto.birthDate,
+                gender = updateUserDto.gender
             )
         )
         return ResponseEntity.noContent().build()

@@ -137,17 +137,31 @@ open class User protected constructor() {
         this.password = newPassword
     }
 
-    fun updateInfo(name: String?, email: String?) {
-        if (name != null) {
-            if (name.isBlank()) throw BusinessException("이름은 빈 문자열일 수 없습니다.", ErrorCode.INVALID_NAME)
-            this.name = name
+    fun updateInfo(
+        name: String? = null,
+        email: String? = null,
+        birthDate: LocalDate? = null,
+        gender: Gender? = null,
+    ) {
+        name?.let {
+            if (it.isBlank()) throw BusinessException("이름은 빈 문자열일 수 없습니다.", ErrorCode.INVALID_NAME)
+            this.name = it
         }
 
-        if (email != null) {
-            if (email.isBlank()) throw BusinessException("이메일은 빈 문자열일 수 없습니다.", ErrorCode.INVALID_EMAIL)
-            this.email = email
+        email?.let {
+            if (it.isBlank()) throw BusinessException("이메일은 빈 문자열일 수 없습니다.", ErrorCode.INVALID_EMAIL)
+            this.email = it
+        }
+
+        birthDate?.let {
+            this.birthDate = it
+        }
+
+        gender?.let {
+            this.gender = it
         }
     }
+
     fun changeActiveRole(role: UserRoleType) {
         if (!hasRole(role)) {
             throw BusinessException("해당 역할이 없습니다.", ErrorCode.ROLE_NOT_FOUND)

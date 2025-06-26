@@ -103,8 +103,7 @@ class UserService (
     @Transactional
     fun updateUserInfo(command: UpdateUserInfoCommand) {
         val user = userValidator.validateUserId(command.userId)
-        user.updateInfo(command.name, command.email)
-        userRepository.save(user)
+        user.updateInfo(command.name, command.email, command.birthDate, command.gender)
     }
 
     @Transactional

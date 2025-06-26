@@ -14,6 +14,7 @@ import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.RequestAttribute
 import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.ResponseBody
 
 @Tag(name = "User", description = "유저 회원가입 API")
 interface UserAPI {
@@ -40,7 +41,7 @@ interface UserAPI {
     @Operation(summary = "유저 기본 정보 수정", description = "이름, 이메일 정보를 수정합니다.")
     fun updateUserInfo(
         request: HttpServletRequest,
-        @Valid updateUserDto: UpdateUserInfoRequest
+        updateUserDto: UpdateUserInfoRequest
     ): ResponseEntity<Void>
 
     @Operation(summary = "비밀번호 변경", description = "현재 비밀번호 확인 후 새 비밀번호로 변경합니다.")

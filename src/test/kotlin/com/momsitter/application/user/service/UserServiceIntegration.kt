@@ -338,7 +338,7 @@ class UserServiceIntegration(
             val saved = userRepository.save(user)
 
             // when
-            val command = UpdateUserInfoCommand(
+            val command = UpdateUserInfoCommand.of(
                 userId = saved.id,
                 name = "새이름",
                 email = "new@example.com"
