@@ -67,4 +67,9 @@ open class ParentProfile protected constructor() {
         return child
     }
 
+    fun findChildById(childId: Long): Child? {
+        return children.find { it.id == childId }
+    }
+
+
 }
