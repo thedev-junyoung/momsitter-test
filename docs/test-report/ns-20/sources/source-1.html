@@ -1,0 +1,132 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > ChangePasswordRequest</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.momsitter.presentation.user.dto.request</a>
+</div>
+
+<h1>Coverage Summary for Class: ChangePasswordRequest (com.momsitter.presentation.user.dto.request)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ChangePasswordRequest</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (3/3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (5/5)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.momsitter.presentation.user.dto.request
+&nbsp;
+&nbsp;import io.swagger.v3.oas.annotations.media.Schema
+&nbsp;import jakarta.validation.constraints.NotBlank
+&nbsp;import jakarta.validation.constraints.Size
+&nbsp;
+<b class="fc">&nbsp;@Schema(description = &quot;비밀번호 변경 요청&quot;)</b>
+&nbsp;data class ChangePasswordRequest(
+&nbsp;
+<b class="fc">&nbsp;    @field:NotBlank(message = &quot;현재 비밀번호는 필수입니다.&quot;)</b>
+&nbsp;    @Schema(
+&nbsp;        description = &quot;현재 비밀번호&quot;,
+&nbsp;        example = &quot;current123!&quot;,
+&nbsp;        minLength = 6,
+&nbsp;        maxLength = 50
+&nbsp;    )
+<b class="fc">&nbsp;    val oldPassword: String,</b>
+&nbsp;
+<b class="fc">&nbsp;    @field:NotBlank(message = &quot;새 비밀번호는 필수입니다.&quot;)</b>
+&nbsp;    @field:Size(min = 6, max = 50, message = &quot;비밀번호는 최소 6자 이상이어야 합니다.&quot;)
+&nbsp;    @Schema(
+&nbsp;        description = &quot;새 비밀번호 (6자 이상, 영문/숫자/특수문자 조합 권장)&quot;,
+&nbsp;        example = &quot;new456!&quot;,
+&nbsp;        minLength = 6,
+&nbsp;        maxLength = 50
+&nbsp;    )
+<b class="fc">&nbsp;    val newPassword: String</b>
+&nbsp;)
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-06-26 20:00</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,108 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > UserJpaRepository</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.momsitter.infrastructure.jpa</a>
+</div>
+
+<h1>Coverage Summary for Class: UserJpaRepository (com.momsitter.infrastructure.jpa)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">UserJpaRepository</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.momsitter.infrastructure.jpa
+&nbsp;
+&nbsp;import com.momsitter.domain.user.User
+&nbsp;import com.momsitter.domain.user.UserRoleType
+&nbsp;import org.springframework.data.jpa.repository.JpaRepository
+&nbsp;import org.springframework.data.jpa.repository.Query
+&nbsp;import org.springframework.data.repository.query.Param
+&nbsp;
+&nbsp;interface UserJpaRepository : JpaRepository&lt;User, Long&gt; {
+&nbsp;    fun existsByUsername(username: String): Boolean
+&nbsp;    fun existsByEmail(email: String): Boolean
+&nbsp;    fun findByUsername(username: String): User?
+&nbsp;
+&nbsp;    @Query(&quot;&quot;&quot;
+&nbsp;        SELECT u FROM User u
+&nbsp;        LEFT JOIN FETCH u.sitterProfile
+&nbsp;        WHERE u.id = :userId 
+&nbsp;    &quot;&quot;&quot;)
+&nbsp;    fun findSitterUser(@Param(&quot;userId&quot;) userId: Long): User?
+&nbsp;
+&nbsp;    @Query(&quot;&quot;&quot;
+&nbsp;    SELECT u FROM User u
+&nbsp;    LEFT JOIN FETCH u.parentProfile pp
+&nbsp;    LEFT JOIN FETCH pp.children
+&nbsp;    WHERE u.id = :userId
+&nbsp;&quot;&quot;&quot;)
+&nbsp;    fun findUserWithParentAndChildren(@Param(&quot;userId&quot;) userId: Long): User?
+&nbsp;
+&nbsp;    @Query(&quot;SELECT u.activeRole FROM User u WHERE u.id = :userId&quot;)
+&nbsp;    fun getUserRole(@Param(&quot;userId&quot;) userId: Long): UserRoleType?
+&nbsp;
+&nbsp;    @Query(&quot;&quot;&quot;
+&nbsp;    SELECT u FROM User u
+&nbsp;    LEFT JOIN FETCH u.sitterProfile sp
+&nbsp;    WHERE u.id = :userId
+&nbsp;&quot;&quot;&quot;)
+&nbsp;    fun findUserWithSitterProfile(@Param(&quot;userId&quot;) userId: Long): User?
+&nbsp;
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-06-26 20:00</div>
+</div>
+</body>
+</html>

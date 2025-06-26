@@ -1,0 +1,138 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > CareRequestRepositoryImpl</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.momsitter.infrastructure</a>
+</div>
+
+<h1>Coverage Summary for Class: CareRequestRepositoryImpl (com.momsitter.infrastructure)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">CareRequestRepositoryImpl</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (4/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (5/5)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">CareRequestRepositoryImpl$$SpringCGLIB$$0</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (4/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (5/5)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.momsitter.infrastructure
+&nbsp;
+&nbsp;import com.momsitter.domain.care.CareRequest
+&nbsp;import com.momsitter.domain.care.CareRequestRepository
+&nbsp;import com.momsitter.infrastructure.jpa.CareRequestJpaRepository
+&nbsp;import org.springframework.stereotype.Repository
+&nbsp;import java.util.*
+&nbsp;
+<b class="fc">&nbsp;@Repository</b>
+&nbsp;class CareRequestRepositoryImpl(
+<b class="fc">&nbsp;    private val careRequestJpaRepository: CareRequestJpaRepository</b>
+&nbsp;) : CareRequestRepository {
+&nbsp;    override fun save(request: CareRequest): CareRequest {
+<b class="fc">&nbsp;        return careRequestJpaRepository.save(request)</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    override fun findById(id: Long): Optional&lt;CareRequest&gt; {
+<b class="fc">&nbsp;        return careRequestJpaRepository.findById(id)</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    override fun findWithParentAndUserById(requestId: Long): Optional&lt;CareRequest&gt; {
+<b class="fc">&nbsp;        return careRequestJpaRepository.findWithParentAndUserById(requestId)</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-06-26 20:00</div>
+</div>
+</body>
+</html>

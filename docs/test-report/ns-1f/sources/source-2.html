@@ -1,0 +1,242 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > UserController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.momsitter.presentation.user.controller</a>
+</div>
+
+<h1>Coverage Summary for Class: UserController (com.momsitter.presentation.user.controller)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">UserController</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (8/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (2/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (43/43)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.momsitter.presentation.user.controller
+&nbsp;
+&nbsp;
+&nbsp;import com.momsitter.application.user.dto.ChangePasswordCommand
+&nbsp;import com.momsitter.application.user.dto.command.ChangeRoleCommand
+&nbsp;import com.momsitter.application.user.dto.command.ExtendToParentCommand
+&nbsp;import com.momsitter.application.user.dto.command.ExtendToSitterCommand
+&nbsp;import com.momsitter.application.user.service.UserService
+&nbsp;import com.momsitter.application.user.dto.command.SignUpCommand
+&nbsp;import com.momsitter.application.user.dto.result.SignUpResult
+&nbsp;import com.momsitter.application.user.service.UpdateUserInfoCommand
+&nbsp;import com.momsitter.common.CustomApiResponse
+&nbsp;import com.momsitter.domain.child.ChildInfo
+&nbsp;import com.momsitter.domain.user.UserRoleType
+&nbsp;import com.momsitter.presentation.user.dto.request.*
+&nbsp;import com.momsitter.presentation.user.dto.response.ExtendToParentResponse
+&nbsp;import com.momsitter.presentation.user.dto.response.ExtendToSitterResponse
+&nbsp;import com.momsitter.presentation.user.dto.response.MyInfoResponse
+&nbsp;import com.momsitter.presentation.user.dto.response.SignupResponse
+&nbsp;import jakarta.servlet.http.HttpServletRequest
+&nbsp;import jakarta.validation.Valid
+&nbsp;import org.springframework.http.ResponseEntity
+&nbsp;import org.springframework.web.bind.annotation.*
+&nbsp;
+<b class="fc">&nbsp;@RestController</b>
+&nbsp;@RequestMapping(&quot;/api/v1/users&quot;)
+&nbsp;class UserController(
+<b class="fc">&nbsp;    private val userService: UserService</b>
+&nbsp;) : UserAPI {
+&nbsp;
+&nbsp;    @PostMapping
+&nbsp;    override fun signup(@RequestBody request: SignupRequest): ResponseEntity&lt;CustomApiResponse&lt;SignupResponse&gt;&gt; {
+<b class="fc">&nbsp;        val command = SignUpCommand.of(request)</b>
+<b class="fc">&nbsp;        val result: SignUpResult = userService.signup(command)</b>
+&nbsp;
+<b class="fc">&nbsp;        return ResponseEntity.ok(</b>
+<b class="fc">&nbsp;            CustomApiResponse.success(</b>
+<b class="fc">&nbsp;                SignupResponse(result.userId, result.username, result.role),</b>
+<b class="fc">&nbsp;                &quot;회원가입 성공&quot;</b>
+&nbsp;            )
+&nbsp;        )
+&nbsp;    }
+&nbsp;
+&nbsp;    @GetMapping(&quot;/me&quot;)
+&nbsp;    override fun getMyInfo(request: HttpServletRequest): ResponseEntity&lt;CustomApiResponse&lt;MyInfoResponse&gt;&gt; {
+<b class="fc">&nbsp;        val userId = request.getAttribute(&quot;userId&quot;) as Long</b>
+<b class="fc">&nbsp;        val user = userService.getMyInfo(userId)</b>
+<b class="fc">&nbsp;        return ResponseEntity.ok(CustomApiResponse.success(MyInfoResponse.from(user)))</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @PostMapping(&quot;/extend-role/sitter&quot;)
+&nbsp;    override fun extendToSitter(
+&nbsp;        request: HttpServletRequest,
+&nbsp;        @RequestBody @Valid requestDto: ExtendToSitterRequest
+&nbsp;    ): ResponseEntity&lt;CustomApiResponse&lt;ExtendToSitterResponse&gt;&gt; {
+<b class="fc">&nbsp;        val userId = request.getAttribute(&quot;userId&quot;) as Long</b>
+<b class="fc">&nbsp;        val command = ExtendToSitterCommand.of(userId, requestDto.minCareAge, requestDto.maxCareAge, requestDto.introduction)</b>
+<b class="fc">&nbsp;        val result = userService.extendToSitter(command)</b>
+&nbsp;
+<b class="fc">&nbsp;        return ResponseEntity.ok(CustomApiResponse.success(ExtendToSitterResponse.from(result), &quot;시터 역할 확장 성공&quot;))</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @PostMapping(&quot;/extend-role/parent&quot;)
+&nbsp;    override fun extendToParent(
+&nbsp;        request: HttpServletRequest,
+&nbsp;        @RequestBody @Valid requestDto: ExtendToParentRequest
+&nbsp;    ): ResponseEntity&lt;CustomApiResponse&lt;ExtendToParentResponse&gt;&gt; {
+<b class="fc">&nbsp;        val userId = request.getAttribute(&quot;userId&quot;) as Long</b>
+<b class="fc">&nbsp;        val command = ExtendToParentCommand(</b>
+<b class="fc">&nbsp;            userId,</b>
+<b class="fc">&nbsp;            requestDto.children?.map { ChildInfo.of(it.name, it.birthDate, it.gender) }</b>
+&nbsp;        )
+<b class="fc">&nbsp;        val result = userService.extendToParent(command)</b>
+&nbsp;
+<b class="fc">&nbsp;        return ResponseEntity.ok(CustomApiResponse.success(ExtendToParentResponse.from(result), &quot;부모 역할 확장 성공&quot;))</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @PatchMapping(&quot;/me/info&quot;)
+&nbsp;    override fun updateUserInfo(
+&nbsp;        request: HttpServletRequest,
+&nbsp;        updateUserDto: UpdateUserInfoRequest
+&nbsp;    ): ResponseEntity&lt;Void&gt; {
+<b class="fc">&nbsp;        val userId = request.getAttribute(&quot;userId&quot;) as Long</b>
+<b class="fc">&nbsp;        userService.updateUserInfo(</b>
+<b class="fc">&nbsp;            UpdateUserInfoCommand.of(</b>
+<b class="fc">&nbsp;                userId = userId,</b>
+<b class="fc">&nbsp;                name = updateUserDto.name,</b>
+<b class="fc">&nbsp;                email = updateUserDto.email,</b>
+<b class="fc">&nbsp;                birthDate = updateUserDto.birthDate,</b>
+<b class="fc">&nbsp;                gender = updateUserDto.gender</b>
+&nbsp;            )
+&nbsp;        )
+<b class="fc">&nbsp;        return ResponseEntity.noContent().build()</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @PatchMapping(&quot;/me/password&quot;)
+&nbsp;    override fun changePassword(
+&nbsp;        request: HttpServletRequest,
+&nbsp;        changePasswordDto : ChangePasswordRequest
+&nbsp;    ): ResponseEntity&lt;Void&gt; {
+<b class="fc">&nbsp;        val userId = request.getAttribute(&quot;userId&quot;) as Long</b>
+<b class="fc">&nbsp;        userService.changePassword(</b>
+<b class="fc">&nbsp;            ChangePasswordCommand.of(</b>
+<b class="fc">&nbsp;                userId = userId,</b>
+<b class="fc">&nbsp;                oldPassword = changePasswordDto.oldPassword,</b>
+<b class="fc">&nbsp;                newPassword = changePasswordDto.newPassword</b>
+&nbsp;            )
+&nbsp;        )
+<b class="fc">&nbsp;        return ResponseEntity.noContent().build()</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @PatchMapping(&quot;/me/role&quot;)
+&nbsp;    override fun changeRole(
+&nbsp;        request: HttpServletRequest,
+&nbsp;        @RequestBody @Valid changeRoleDto: ChangeRoleRequest
+&nbsp;    ): ResponseEntity&lt;CustomApiResponse&lt;UserRoleType&gt;&gt; {
+<b class="fc">&nbsp;        val userId = request.getAttribute(&quot;userId&quot;) as Long</b>
+<b class="fc">&nbsp;        val changedRole=userService.changeActiveRole(</b>
+<b class="fc">&nbsp;            ChangeRoleCommand.of(</b>
+<b class="fc">&nbsp;                userId = userId,</b>
+<b class="fc">&nbsp;                newRole = changeRoleDto.newRole</b>
+&nbsp;            )
+&nbsp;        )
+<b class="fc">&nbsp;        return ResponseEntity.ok(CustomApiResponse.success(changedRole, &quot;역할 변경 성공&quot;))</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-06-26 20:00</div>
+</div>
+</body>
+</html>

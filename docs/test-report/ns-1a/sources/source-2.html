@@ -1,0 +1,100 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > ChildAPI</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.momsitter.presentation.child.controller</a>
+</div>
+
+<h1>Coverage Summary for Class: ChildAPI (com.momsitter.presentation.child.controller)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">ChildAPI</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.momsitter.presentation.child.controller
+&nbsp;
+&nbsp;import com.momsitter.common.CustomApiResponse
+&nbsp;import com.momsitter.presentation.child.dto.request.CreateChildRequest
+&nbsp;import com.momsitter.presentation.child.dto.request.UpdateChildRequest
+&nbsp;import io.swagger.v3.oas.annotations.Operation
+&nbsp;import io.swagger.v3.oas.annotations.tags.Tag
+&nbsp;import jakarta.servlet.http.HttpServletRequest
+&nbsp;import jakarta.validation.Valid
+&nbsp;import org.springframework.http.ResponseEntity
+&nbsp;import org.springframework.web.bind.annotation.RequestBody
+&nbsp;
+&nbsp;@Tag(name = &quot;Child&quot;, description = &quot;자녀 정보 관련 API&quot;)
+&nbsp;interface ChildAPI {
+&nbsp;
+&nbsp;    @Operation(summary = &quot;자녀 등록&quot;, description = &quot;새로운 자녀 정보를 등록합니다.&quot;)
+&nbsp;    fun createChild(
+&nbsp;        request: HttpServletRequest,
+&nbsp;        @Valid @RequestBody requestDto: CreateChildRequest
+&nbsp;    ): ResponseEntity&lt;CustomApiResponse&lt;Long&gt;&gt;
+&nbsp;
+&nbsp;
+&nbsp;    @Operation(
+&nbsp;        summary = &quot;자녀 정보 수정&quot;,
+&nbsp;        description = &quot;자녀의 이름, 생년월일, 성별을 수정합니다.&quot;
+&nbsp;    )
+&nbsp;    fun updateChild(
+&nbsp;        request: HttpServletRequest,
+&nbsp;        childId: Long,
+&nbsp;        @Valid @RequestBody requestDto: UpdateChildRequest
+&nbsp;    ): ResponseEntity&lt;CustomApiResponse&lt;Unit&gt;&gt;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-06-26 20:00</div>
+</div>
+</body>
+</html>

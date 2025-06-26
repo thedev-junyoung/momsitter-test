@@ -1,0 +1,142 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > CareRequestController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.momsitter.presentation.care.controller</a>
+</div>
+
+<h1>Coverage Summary for Class: CareRequestController (com.momsitter.presentation.care.controller)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">CareRequestController</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (3/3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (8/8)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.momsitter.presentation.care.controller
+&nbsp;
+&nbsp;import com.momsitter.application.care.CareRequestService
+&nbsp;import com.momsitter.common.CustomApiResponse
+&nbsp;import com.momsitter.presentation.care.dto.CreateCareRequestRequest
+&nbsp;import com.momsitter.presentation.care.dto.UpdateCareRequestRequest
+&nbsp;import jakarta.servlet.http.HttpServletRequest
+&nbsp;import jakarta.validation.Valid
+&nbsp;import org.springframework.http.ResponseEntity
+&nbsp;import org.springframework.web.bind.annotation.*
+&nbsp;
+<b class="fc">&nbsp;@RestController</b>
+&nbsp;@RequestMapping(&quot;/api/v1/care-requests&quot;)
+&nbsp;class CareRequestController(
+<b class="fc">&nbsp;    private val careRequestService: CareRequestService</b>
+&nbsp;): CareRequestAPI{
+&nbsp;
+&nbsp;    @PostMapping
+&nbsp;    override fun create(
+&nbsp;        request: HttpServletRequest,
+&nbsp;        @RequestBody @Valid command: CreateCareRequestRequest
+&nbsp;    ): ResponseEntity&lt;CustomApiResponse&lt;Long&gt;&gt; {
+<b class="fc">&nbsp;        val userId = request.getAttribute(&quot;userId&quot;) as Long</b>
+<b class="fc">&nbsp;        val careRequestId = careRequestService.createCareRequest(command.toCommand(userId))</b>
+<b class="fc">&nbsp;        return ResponseEntity.ok(CustomApiResponse.success(careRequestId, &quot;돌봄 요청 생성 성공&quot;))</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @PutMapping(&quot;/{id}&quot;)
+&nbsp;    override fun update(
+&nbsp;        request: HttpServletRequest,
+&nbsp;        @PathVariable id: Long,
+&nbsp;        @RequestBody @Valid command: UpdateCareRequestRequest
+&nbsp;    ): ResponseEntity&lt;CustomApiResponse&lt;Unit&gt;&gt; {
+<b class="fc">&nbsp;        val userId = request.getAttribute(&quot;userId&quot;) as Long</b>
+<b class="fc">&nbsp;        careRequestService.updateCareRequest(command.toCommand(id, userId))</b>
+<b class="fc">&nbsp;        return ResponseEntity.ok(CustomApiResponse.success(Unit, &quot;돌봄 요청 수정 성공&quot;))</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-06-26 20:00</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,132 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > AuthController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.momsitter.presentation.user.controller</a>
+</div>
+
+<h1>Coverage Summary for Class: AuthController (com.momsitter.presentation.user.controller)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">AuthController</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (2/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (6/6)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.momsitter.presentation.user.controller
+&nbsp;
+&nbsp;import com.momsitter.application.user.dto.command.LoginCommand
+&nbsp;import com.momsitter.application.user.service.LoginService
+&nbsp;import com.momsitter.common.CustomApiResponse
+&nbsp;import com.momsitter.presentation.user.dto.request.LoginRequest
+&nbsp;import com.momsitter.presentation.user.dto.response.LoginResponse
+&nbsp;import org.springframework.http.ResponseEntity
+&nbsp;import org.springframework.web.bind.annotation.PostMapping
+&nbsp;import org.springframework.web.bind.annotation.RequestBody
+&nbsp;import org.springframework.web.bind.annotation.RequestMapping
+&nbsp;import org.springframework.web.bind.annotation.RestController
+&nbsp;
+<b class="fc">&nbsp;@RestController</b>
+&nbsp;@RequestMapping(&quot;/api/v1/auth&quot;)
+&nbsp;class AuthController(
+<b class="fc">&nbsp;    private val loginService: LoginService</b>
+&nbsp;) : AuthAPI {
+&nbsp;
+&nbsp;    @PostMapping(&quot;/login&quot;)
+&nbsp;    override fun login(@RequestBody request: LoginRequest): ResponseEntity&lt;CustomApiResponse&lt;LoginResponse&gt;&gt; {
+<b class="fc">&nbsp;        val command = LoginCommand(request.username, request.password)</b>
+<b class="fc">&nbsp;        val result = loginService.login(command)</b>
+<b class="fc">&nbsp;        return ResponseEntity.ok(</b>
+<b class="fc">&nbsp;            CustomApiResponse.success(LoginResponse(result.userId, result.username, result.accessToken),&quot;로그인 성공&quot;)</b>
+&nbsp;        )
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-06-26 20:00</div>
+</div>
+</body>
+</html>

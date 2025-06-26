@@ -1,0 +1,158 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > ChildController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.momsitter.presentation.child.controller</a>
+</div>
+
+<h1>Coverage Summary for Class: ChildController (com.momsitter.presentation.child.controller)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ChildController</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (3/3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (10/10)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.momsitter.presentation.child.controller
+&nbsp;
+&nbsp;import com.momsitter.application.child.dto.CreateChildCommand
+&nbsp;import com.momsitter.application.child.dto.UpdateChildCommand
+&nbsp;import com.momsitter.application.child.sevice.ChildService
+&nbsp;import com.momsitter.common.CustomApiResponse
+&nbsp;import com.momsitter.presentation.child.dto.request.CreateChildRequest
+&nbsp;import com.momsitter.presentation.child.dto.request.UpdateChildRequest
+&nbsp;import jakarta.servlet.http.HttpServletRequest
+&nbsp;import jakarta.validation.Valid
+&nbsp;import org.springframework.http.ResponseEntity
+&nbsp;import org.springframework.web.bind.annotation.PatchMapping
+&nbsp;import org.springframework.web.bind.annotation.PathVariable
+&nbsp;import org.springframework.web.bind.annotation.PostMapping
+&nbsp;import org.springframework.web.bind.annotation.RequestBody
+&nbsp;import org.springframework.web.bind.annotation.RequestMapping
+&nbsp;import org.springframework.web.bind.annotation.RestController
+&nbsp;
+<b class="fc">&nbsp;@RestController</b>
+&nbsp;@RequestMapping(&quot;/api/v1/child&quot;)
+&nbsp;class ChildController (
+<b class="fc">&nbsp;    private val childService: ChildService</b>
+&nbsp;): ChildAPI{
+&nbsp;
+&nbsp;    @PostMapping
+&nbsp;    override fun createChild(
+&nbsp;        request: HttpServletRequest,
+&nbsp;        requestDto: CreateChildRequest
+&nbsp;    ): ResponseEntity&lt;CustomApiResponse&lt;Long&gt;&gt; {
+<b class="fc">&nbsp;        val userId = request.getAttribute(&quot;userId&quot;) as Long</b>
+<b class="fc">&nbsp;        val childId = childService.createChild(</b>
+<b class="fc">&nbsp;            CreateChildCommand.of(userId = userId, requestDto = requestDto)</b>
+&nbsp;        )
+<b class="fc">&nbsp;        return ResponseEntity.ok(CustomApiResponse.success(childId, &quot;자녀 정보가 등록되었습니다.&quot;))</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    @PatchMapping(&quot;/{childId}/profile&quot;)
+&nbsp;    override fun updateChild(
+&nbsp;        request: HttpServletRequest,
+&nbsp;        @PathVariable childId: Long,
+&nbsp;        @Valid @RequestBody requestDto: UpdateChildRequest
+&nbsp;    ): ResponseEntity&lt;CustomApiResponse&lt;Unit&gt;&gt; {
+<b class="fc">&nbsp;        val userId = request.getAttribute(&quot;userId&quot;) as Long</b>
+<b class="fc">&nbsp;        childService.updateChild(</b>
+<b class="fc">&nbsp;            UpdateChildCommand.of(userId = userId, childId = childId,requestDto = requestDto)</b>
+&nbsp;        )
+<b class="fc">&nbsp;        return ResponseEntity.ok(CustomApiResponse.success(Unit, &quot;자녀 정보가 수정되었습니다.&quot;))</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-06-26 20:00</div>
+</div>
+</body>
+</html>

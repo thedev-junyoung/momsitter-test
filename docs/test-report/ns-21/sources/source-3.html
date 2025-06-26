@@ -1,0 +1,179 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > ExtendToParentResponse</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.momsitter.presentation.user.dto.response</a>
+</div>
+
+<h1>Coverage Summary for Class: ExtendToParentResponse (com.momsitter.presentation.user.dto.response)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ExtendToParentResponse</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (4/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (7/7)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">ExtendToParentResponse$Companion</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    50%
+  </span>
+  <span class="absValue">
+    (2/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    83.3%
+  </span>
+  <span class="absValue">
+    (5/6)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (5/5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    50%
+  </span>
+  <span class="absValue">
+    (2/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    92.3%
+  </span>
+  <span class="absValue">
+    (12/13)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.momsitter.presentation.user.dto.response
+&nbsp;
+&nbsp;import com.momsitter.application.user.dto.result.ExtendToParentResult
+&nbsp;import com.momsitter.domain.user.UserRoleType
+&nbsp;import io.swagger.v3.oas.annotations.media.Schema
+&nbsp;
+<b class="fc">&nbsp;@Schema(description = &quot;부모 역할 확장 응답&quot;)</b>
+&nbsp;data class ExtendToParentResponse(
+<b class="fc">&nbsp;    @Schema(description = &quot;유저 ID&quot;)</b>
+<b class="fc">&nbsp;    val userId: Long,</b>
+&nbsp;
+<b class="fc">&nbsp;    @Schema(description = &quot;현재 보유 역할 목록&quot;)</b>
+<b class="fc">&nbsp;    val roles: Set&lt;UserRoleType&gt;,</b>
+&nbsp;
+<b class="fc">&nbsp;    @Schema(description = &quot;자녀 목록&quot;)</b>
+<b class="fc">&nbsp;    val children: List&lt;ChildResponse&gt;</b>
+&nbsp;) {
+&nbsp;    companion object {
+&nbsp;        fun from(result: ExtendToParentResult): ExtendToParentResponse {
+<b class="fc">&nbsp;            return ExtendToParentResponse(</b>
+<b class="fc">&nbsp;                userId = result.userId,</b>
+<b class="fc">&nbsp;                roles = result.roles,</b>
+<b class="pc">&nbsp;                children = result.parentProfile?.children?.map {</b>
+<b class="fc">&nbsp;                    ChildResponse(it.name, it.birthDate, it.gender)</b>
+<b class="nc">&nbsp;                } ?: emptyList()</b>
+&nbsp;            )
+&nbsp;        }
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-06-26 20:00</div>
+</div>
+</body>
+</html>

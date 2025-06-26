@@ -1,0 +1,256 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > UserService</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.momsitter.application.user.service</a>
+</div>
+
+<h1>Coverage Summary for Class: UserService (com.momsitter.application.user.service)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">UserService</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (8/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    75%
+  </span>
+  <span class="absValue">
+    (12/16)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    92.9%
+  </span>
+  <span class="absValue">
+    (39/42)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">UserService$$SpringCGLIB$$0</td>
+  </tr>
+  <tr>
+    <td class="name">UserService$WhenMappings</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (8/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    75%
+  </span>
+  <span class="absValue">
+    (12/16)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    92.9%
+  </span>
+  <span class="absValue">
+    (39/42)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.momsitter.application.user.service
+&nbsp;
+&nbsp;import com.momsitter.application.user.dto.ChangePasswordCommand
+&nbsp;import com.momsitter.application.user.dto.command.ChangeRoleCommand
+&nbsp;import com.momsitter.application.user.dto.command.ExtendToParentCommand
+&nbsp;import com.momsitter.application.user.dto.command.ExtendToSitterCommand
+&nbsp;import com.momsitter.application.user.dto.result.MyInfoResult
+&nbsp;import com.momsitter.application.user.dto.command.SignUpCommand
+&nbsp;import com.momsitter.application.user.dto.result.ExtendToParentResult
+&nbsp;import com.momsitter.application.user.dto.result.ExtendToSitterResult
+&nbsp;import com.momsitter.application.user.dto.result.SignUpResult
+&nbsp;import com.momsitter.application.user.factory.UserSignUpStrategy
+&nbsp;import com.momsitter.application.user.validator.SignUpValidator
+&nbsp;import com.momsitter.application.user.validator.UserValidator
+&nbsp;import com.momsitter.common.BusinessException
+&nbsp;import com.momsitter.common.ErrorCode
+&nbsp;import com.momsitter.domain.PasswordEncoder
+&nbsp;import com.momsitter.domain.user.UserRepository
+&nbsp;import com.momsitter.domain.user.UserRoleType
+&nbsp;
+&nbsp;import jakarta.transaction.Transactional
+&nbsp;import org.springframework.stereotype.Service
+&nbsp;
+<b class="fc">&nbsp;@Service</b>
+&nbsp;class UserService (
+<b class="fc">&nbsp;    private val userRepository: UserRepository,</b>
+<b class="fc">&nbsp;    private val signUpValidator: SignUpValidator,</b>
+<b class="fc">&nbsp;    private val userValidator: UserValidator,</b>
+<b class="fc">&nbsp;    private val strategies: List&lt;UserSignUpStrategy&gt;, // Spring이 자동 주입</b>
+<b class="fc">&nbsp;    private val passwordEncoder: PasswordEncoder</b>
+&nbsp;){
+&nbsp;    // 회원가입
+&nbsp;    // 사용자는 회원가입을 통해서 시터회원 또는 부모회원으로 가입할 수 있어야 합니다.
+&nbsp;    @Transactional
+&nbsp;    fun signup(command: SignUpCommand): SignUpResult {
+&nbsp;        // 1. 유효성 검사
+<b class="fc">&nbsp;        signUpValidator.validate(command.username, command.email)</b>
+&nbsp;
+&nbsp;        // 2. 비밀번호 암호화
+<b class="fc">&nbsp;        val encodedPassword = passwordEncoder.encode(command.rawPassword)</b>
+&nbsp;
+&nbsp;        // 3. 역할에 따른 사용자 생성
+<b class="pc">&nbsp;        val strategy = strategies.find { it.supports(command.roles) }</b>
+<b class="nc">&nbsp;            ?: throw IllegalArgumentException(&quot;Unsupported role: ${command.roles}&quot;)</b>
+&nbsp;
+&nbsp;
+<b class="fc">&nbsp;        val user = strategy.create(command, encodedPassword)</b>
+<b class="fc">&nbsp;        userRepository.save(user)</b>
+<b class="fc">&nbsp;        return SignUpResult.from(user)</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Transactional
+&nbsp;    fun getMyInfo(userId: Long): MyInfoResult {
+<b class="fc">&nbsp;        val role = userRepository.getUserRole(userId)</b>
+&nbsp;
+<b class="pc">&nbsp;        val user = when (role) {</b>
+<b class="fc">&nbsp;            UserRoleType.SITTER -&gt; userRepository.findSitterUser(userId)</b>
+<b class="fc">&nbsp;            UserRoleType.PARENT -&gt; userRepository.findParentUser(userId)</b>
+<b class="nc">&nbsp;            else -&gt; userValidator.validateUserId(userId)</b>
+<b class="nc">&nbsp;        } ?: throw BusinessException(&quot;존재하지 않는 사용자입니다.&quot;, ErrorCode.USER_NOT_FOUND)</b>
+&nbsp;
+<b class="fc">&nbsp;        return MyInfoResult(user) // 여전히 생성자 활용</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // 유저 정보 수정(Token 기반)
+&nbsp;    // 사용자는 회원가입시 제출한 정보를 수정할 수 있어야 합니다.
+&nbsp;    // 이 API 는 인증토큰을 이용한 사용자 인증 과정이 있어야 합니다.
+&nbsp;
+&nbsp;    // 시터로 확장하기
+&nbsp;    @Transactional
+&nbsp;    fun extendToSitter(command: ExtendToSitterCommand): ExtendToSitterResult {
+<b class="fc">&nbsp;        val user = userValidator.validateUserId(command.userId)</b>
+<b class="fc">&nbsp;        user.extendToSitter(</b>
+<b class="fc">&nbsp;            minAge = command.minCareAge,</b>
+<b class="fc">&nbsp;            maxAge = command.maxCareAge,</b>
+<b class="fc">&nbsp;            introduction = command.introduction</b>
+&nbsp;        )
+&nbsp;
+<b class="fc">&nbsp;        return ExtendToSitterResult.from(user)</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // 부모로 확장하기
+&nbsp;    @Transactional
+&nbsp;    fun extendToParent(command: ExtendToParentCommand): ExtendToParentResult {
+<b class="fc">&nbsp;        val user = userValidator.validateUserId(command.userId)</b>
+<b class="fc">&nbsp;        val children = command.children ?: emptyList()</b>
+<b class="fc">&nbsp;        user.extendToParent(children)</b>
+&nbsp;
+<b class="fc">&nbsp;        return ExtendToParentResult.from(user)</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Transactional
+&nbsp;    fun changePassword(command: ChangePasswordCommand) {
+<b class="fc">&nbsp;        val user = userValidator.validateUserId(command.userId)</b>
+<b class="fc">&nbsp;        if (!passwordEncoder.matches(command.oldPassword, user.password)) {</b>
+<b class="fc">&nbsp;            throw BusinessException(&quot;비밀번호가 일치하지 않습니다.&quot;, ErrorCode.INVALID_PASSWORD)</b>
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        user.changePassword(passwordEncoder.encode(command.newPassword))</b>
+<b class="fc">&nbsp;        userRepository.save(user)</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Transactional
+&nbsp;    fun updateUserInfo(command: UpdateUserInfoCommand) {
+<b class="fc">&nbsp;        val user = userValidator.validateUserId(command.userId)</b>
+<b class="fc">&nbsp;        user.updateInfo(command.name, command.email, command.birthDate, command.gender)</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Transactional
+&nbsp;    fun changeActiveRole(command: ChangeRoleCommand) : UserRoleType {
+<b class="fc">&nbsp;        val user = userValidator.validateUserId(command.userId)</b>
+<b class="fc">&nbsp;        user.hasRole(command.newRole)</b>
+<b class="fc">&nbsp;        user.changeActiveRole(command.newRole)</b>
+<b class="fc">&nbsp;        userRepository.save(user)</b>
+<b class="fc">&nbsp;        return user.activeRole</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-06-26 20:00</div>
+</div>
+</body>
+</html>

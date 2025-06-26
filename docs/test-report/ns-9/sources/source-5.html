@@ -1,0 +1,195 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > SignUpCommand</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.momsitter.application.user.dto.command</a>
+</div>
+
+<h1>Coverage Summary for Class: SignUpCommand (com.momsitter.application.user.dto.command)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">SignUpCommand</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (10/10)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">SignUpCommand$Companion</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (4/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (14/14)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (2/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (4/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (24/24)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.momsitter.application.user.dto.command
+&nbsp;
+&nbsp;import com.momsitter.domain.child.ChildInfo
+&nbsp;import com.momsitter.domain.parent.ParentProfileInfo
+&nbsp;import com.momsitter.domain.sitter.SitterProfileInfo
+&nbsp;import com.momsitter.domain.user.Gender
+&nbsp;import com.momsitter.presentation.user.dto.request.SignupRequest
+&nbsp;import java.time.LocalDate
+&nbsp;
+<b class="fc">&nbsp;data class SignUpCommand(</b>
+<b class="fc">&nbsp;    val username: String,</b>
+<b class="fc">&nbsp;    val rawPassword: String,</b>
+<b class="fc">&nbsp;    val name: String,</b>
+<b class="fc">&nbsp;    val birthDate: LocalDate,</b>
+<b class="fc">&nbsp;    val gender: Gender,</b>
+<b class="fc">&nbsp;    val email: String,</b>
+<b class="fc">&nbsp;    val roles: String,</b>
+&nbsp;
+<b class="fc">&nbsp;    val sitterInfo: SitterProfileInfo?,     // 시터로 가입할 경우만 입력</b>
+<b class="fc">&nbsp;    val parentInfo: ParentProfileInfo?      // 부모로 가입할 경우만 입력</b>
+&nbsp;) {
+&nbsp;    companion object {
+&nbsp;        fun of(request: SignupRequest): SignUpCommand {
+<b class="fc">&nbsp;            return SignUpCommand(</b>
+<b class="fc">&nbsp;                username = request.username,</b>
+<b class="fc">&nbsp;                rawPassword = request.password,</b>
+<b class="fc">&nbsp;                name = request.name,</b>
+<b class="fc">&nbsp;                birthDate = request.birthDate,</b>
+<b class="fc">&nbsp;                gender = Gender.valueOf(request.gender.uppercase()),</b>
+<b class="fc">&nbsp;                email = request.email,</b>
+<b class="fc">&nbsp;                roles = request.roles,</b>
+<b class="fc">&nbsp;                sitterInfo = request.sitter?.let {</b>
+<b class="fc">&nbsp;                    SitterProfileInfo.of(it.minAge, it.maxAge, it.introduction)</b>
+&nbsp;                },
+<b class="fc">&nbsp;                parentInfo = request.parent?.let {</b>
+<b class="fc">&nbsp;                    ParentProfileInfo.of(</b>
+<b class="fc">&nbsp;                        it.children.map { child -&gt;</b>
+<b class="fc">&nbsp;                            ChildInfo.of(child.name, child.birthDate, child.gender)</b>
+&nbsp;                        }
+&nbsp;                    )
+&nbsp;                }
+&nbsp;            )
+&nbsp;        }
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-06-26 20:00</div>
+</div>
+</body>
+</html>

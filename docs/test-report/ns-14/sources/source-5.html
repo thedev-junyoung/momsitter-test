@@ -1,0 +1,102 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > UserRepository</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.momsitter.domain.user</a>
+</div>
+
+<h1>Coverage Summary for Class: UserRepository (com.momsitter.domain.user)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+</tr>
+  <tr>
+    <td class="name">UserRepository$Subclass0</td>
+  </tr>
+  <tr>
+    <td class="name">UserRepository$Subclass0$auxiliary$5zU4g9z6</td>
+  </tr>
+  <tr>
+    <td class="name">UserRepository$Subclass0$auxiliary$Lfk46at7</td>
+  </tr>
+  <tr>
+    <td class="name">UserRepository$Subclass0$auxiliary$Swl6uRPV</td>
+  </tr>
+  <tr>
+    <td class="name">UserRepository$Subclass0$auxiliary$Ykx0L0Lg</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.momsitter.domain.user
+&nbsp;
+&nbsp;import java.util.*
+&nbsp;
+&nbsp;
+&nbsp;interface UserRepository {
+&nbsp;    fun save(user: User): User
+&nbsp;    fun existsByUsername(username: String): Boolean
+&nbsp;    fun existsByEmail(email: String): Boolean
+&nbsp;    fun findByUsername(username: String): User?
+&nbsp;    fun delete(user: User): Int
+&nbsp;    fun findById(userId: Long): Optional&lt;User&gt;
+&nbsp;    fun deleteAll() : Int
+&nbsp;    fun findSitterUser(userId: Long): User?
+&nbsp;    fun findParentUser(userId: Long): User?
+&nbsp;    fun getUserRole(userId: Long): UserRoleType?
+&nbsp;    fun findUserWithParentAndChildren(userId: Long): User?
+&nbsp;    fun findUserWithSitterProfile(userId: Long): User?
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-06-26 20:00</div>
+</div>
+</body>
+</html>

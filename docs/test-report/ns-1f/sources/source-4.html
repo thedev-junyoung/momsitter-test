@@ -1,0 +1,128 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > UserAPI</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.momsitter.presentation.user.controller</a>
+</div>
+
+<h1>Coverage Summary for Class: UserAPI (com.momsitter.presentation.user.controller)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">UserAPI</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.momsitter.presentation.user.controller
+&nbsp;
+&nbsp;import com.momsitter.common.CustomApiResponse
+&nbsp;import com.momsitter.domain.user.UserRoleType
+&nbsp;import com.momsitter.presentation.user.dto.request.*
+&nbsp;import com.momsitter.presentation.user.dto.response.ExtendToParentResponse
+&nbsp;import com.momsitter.presentation.user.dto.response.ExtendToSitterResponse
+&nbsp;import com.momsitter.presentation.user.dto.response.MyInfoResponse
+&nbsp;import com.momsitter.presentation.user.dto.response.SignupResponse
+&nbsp;import io.swagger.v3.oas.annotations.Operation
+&nbsp;import io.swagger.v3.oas.annotations.tags.Tag
+&nbsp;import jakarta.servlet.http.HttpServletRequest
+&nbsp;import jakarta.validation.Valid
+&nbsp;import org.springframework.http.ResponseEntity
+&nbsp;import org.springframework.web.bind.annotation.RequestAttribute
+&nbsp;import org.springframework.web.bind.annotation.RequestBody
+&nbsp;import org.springframework.web.bind.annotation.ResponseBody
+&nbsp;
+&nbsp;@Tag(name = &quot;User&quot;, description = &quot;유저 회원가입 API&quot;)
+&nbsp;interface UserAPI {
+&nbsp;
+&nbsp;    @Operation(summary = &quot;회원가입&quot;, description = &quot;회원가입을 진행합니다.&quot;)
+&nbsp;    fun signup(@Valid request: SignupRequest): ResponseEntity&lt;CustomApiResponse&lt;SignupResponse&gt;&gt;
+&nbsp;
+&nbsp;    @Operation(summary = &quot;내 정보 조회&quot;, description = &quot;인증된 사용자의 정보를 조회합니다.&quot;)
+&nbsp;    fun getMyInfo(request: HttpServletRequest): ResponseEntity&lt;CustomApiResponse&lt;MyInfoResponse&gt;&gt;
+&nbsp;
+&nbsp;    @Operation(summary = &quot;부모 → 시터 역할 확장&quot;, description = &quot;부모 역할의 사용자가 시터 역할을 추가합니다.&quot;)
+&nbsp;    fun extendToSitter(
+&nbsp;        request: HttpServletRequest,
+&nbsp;        @Valid requestDto: ExtendToSitterRequest
+&nbsp;    ): ResponseEntity&lt;CustomApiResponse&lt;ExtendToSitterResponse&gt;&gt;
+&nbsp;
+&nbsp;    @Operation(summary = &quot;시터 → 부모 역할 확장&quot;, description = &quot;시터 역할의 사용자가 부모 역할을 추가합니다.&quot;)
+&nbsp;    fun extendToParent(
+&nbsp;        request: HttpServletRequest,
+&nbsp;        @Valid requestDto: ExtendToParentRequest
+&nbsp;    ): ResponseEntity&lt;CustomApiResponse&lt;ExtendToParentResponse&gt;&gt;
+&nbsp;
+&nbsp;
+&nbsp;    @Operation(summary = &quot;유저 기본 정보 수정&quot;, description = &quot;이름, 이메일 정보를 수정합니다.&quot;)
+&nbsp;    fun updateUserInfo(
+&nbsp;        request: HttpServletRequest,
+&nbsp;        updateUserDto: UpdateUserInfoRequest
+&nbsp;    ): ResponseEntity&lt;Void&gt;
+&nbsp;
+&nbsp;    @Operation(summary = &quot;비밀번호 변경&quot;, description = &quot;현재 비밀번호 확인 후 새 비밀번호로 변경합니다.&quot;)
+&nbsp;    fun changePassword(
+&nbsp;        request: HttpServletRequest,
+&nbsp;        @Valid @RequestBody changePasswordDto: ChangePasswordRequest
+&nbsp;    ): ResponseEntity&lt;Void&gt;
+&nbsp;
+&nbsp;    @Operation(
+&nbsp;        summary = &quot;유저 역할 변경&quot;,
+&nbsp;        description = &quot;관리자 권한으로 유저의 역할을 변경합니다. (예: 부모 → 시터, 시터 → 부모)&quot;
+&nbsp;    )
+&nbsp;    fun changeRole(
+&nbsp;        request: HttpServletRequest,
+&nbsp;        changeRoleDto: ChangeRoleRequest): ResponseEntity&lt;CustomApiResponse&lt;UserRoleType&gt;&gt;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-06-26 20:00</div>
+</div>
+</body>
+</html>

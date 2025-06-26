@@ -1,0 +1,132 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > JwtTokenValidator</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.momsitter.infrastructure.jwt</a>
+</div>
+
+<h1>Coverage Summary for Class: JwtTokenValidator (com.momsitter.infrastructure.jwt)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">JwtTokenValidator</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (3/3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (8/8)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.momsitter.infrastructure.jwt
+&nbsp;
+&nbsp;import io.jsonwebtoken.Jwts
+&nbsp;import io.jsonwebtoken.security.Keys
+&nbsp;import org.springframework.stereotype.Component
+&nbsp;import java.nio.charset.StandardCharsets
+&nbsp;import java.util.*
+&nbsp;
+<b class="fc">&nbsp;@Component</b>
+&nbsp;class JwtTokenValidator(
+<b class="fc">&nbsp;    private val jwtProperties: JwtProperties</b>
+&nbsp;) {
+<b class="fc">&nbsp;    private val key = Keys.hmacShaKeyFor(jwtProperties.secret.toByteArray(StandardCharsets.UTF_8))</b>
+&nbsp;
+&nbsp;    fun isValid(token: String): Boolean {
+&nbsp;        return try {
+<b class="fc">&nbsp;            val claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token)</b>
+<b class="fc">&nbsp;            !claims.body.expiration.before(Date())</b>
+&nbsp;        } catch (e: Exception) {
+<b class="fc">&nbsp;            false</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    fun extractUserId(token: String): Long {
+<b class="fc">&nbsp;        val claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token)</b>
+<b class="fc">&nbsp;        return claims.body.subject.toLong()</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-06-26 20:00</div>
+</div>
+</body>
+</html>

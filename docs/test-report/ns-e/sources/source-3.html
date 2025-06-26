@@ -1,0 +1,126 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > ErrorCode</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.momsitter.common</a>
+</div>
+
+<h1>Coverage Summary for Class: ErrorCode (com.momsitter.common)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ErrorCode</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (2/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (15/15)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.momsitter.common
+&nbsp;
+&nbsp;import org.springframework.http.HttpStatus
+&nbsp;
+<b class="fc">&nbsp;enum class ErrorCode(val status: HttpStatus, val message: String) {</b>
+<b class="fc">&nbsp;    USER_NOT_FOUND(HttpStatus.NOT_FOUND, &quot;유저를 찾을 수 없습니다.&quot;),</b>
+<b class="fc">&nbsp;    INVALID_PASSWORD(HttpStatus.BAD_REQUEST, &quot;비밀번호가 일치하지 않습니다.&quot;),</b>
+<b class="fc">&nbsp;    DUPLICATE_ROLE(HttpStatus.BAD_REQUEST, &quot;이미 존재하는 역할입니다.&quot;),</b>
+<b class="fc">&nbsp;    PARENT_PROFILE_NOT_FOUND(HttpStatus.BAD_REQUEST, &quot;부모 프로필을 찾을 수 없습니다.&quot;),</b>
+<b class="fc">&nbsp;    CARE_REQUEST_NOT_FOUND(HttpStatus.BAD_REQUEST, &quot;돌봄 요청을 찾을 수 없습니다.&quot;),</b>
+<b class="fc">&nbsp;    CARE_REQUEST_FORBIDDEN(HttpStatus.FORBIDDEN, &quot;접근이 금지되었습니다.&quot;),</b>
+<b class="fc">&nbsp;    INVALID_NAME(HttpStatus.BAD_REQUEST, &quot;유효하지 않은 이름입니다.&quot;),</b>
+<b class="fc">&nbsp;    INVALID_EMAIL(HttpStatus.BAD_REQUEST, &quot;유효하지 않은 이메일입니다.&quot;),</b>
+<b class="fc">&nbsp;    NOT_SITTER(HttpStatus.NOT_FOUND, &quot;시터 프로필이 존재하지 않습니다.&quot;),</b>
+<b class="fc">&nbsp;    NOT_PARENT(HttpStatus.NOT_FOUND, &quot;부모 프로필이 존재하지 않습니다.&quot;),</b>
+<b class="fc">&nbsp;    CHILD_NOT_FOUND(HttpStatus.NOT_FOUND, &quot;자녀 정보를 찾을 수 없습니다.&quot;),</b>
+<b class="fc">&nbsp;    ROLE_NOT_FOUND(HttpStatus.NOT_FOUND, &quot;해당 역할이 없습니다.&quot;),</b>
+<b class="fc">&nbsp;    INVALID_USER_ROLE(HttpStatus.BAD_REQUEST, &quot;지원하지 않는 사용자 역할입니다.&quot;),</b>
+<b class="fc">&nbsp;    INVALID_INPUT_VALUE(HttpStatus.BAD_REQUEST, &quot;입력값이 유효하지 않습니다.&quot;),</b>
+&nbsp;
+&nbsp;    ;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-06-26 20:00</div>
+</div>
+</body>
+</html>
