@@ -15,4 +15,8 @@ enum class ErrorCode(val status: HttpStatus, val message: String) {
     NOT_PARENT(HttpStatus.NOT_FOUND, "부모 프로필이 존재하지 않습니다."),
     CHILD_NOT_FOUND(HttpStatus.NOT_FOUND, "자녀 정보를 찾을 수 없습니다."),
     ROLE_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 역할이 없습니다."),
+    INVALID_USER_ROLE(HttpStatus.BAD_REQUEST, "지원하지 않는 사용자 역할입니다."),
+    INVALID_INPUT_VALUE(HttpStatus.BAD_REQUEST, "입력값이 유효하지 않습니다."),
+
+    ;
 }

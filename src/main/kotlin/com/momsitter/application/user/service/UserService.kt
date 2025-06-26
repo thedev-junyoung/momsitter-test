@@ -108,11 +108,12 @@ class UserService (
     }
 
     @Transactional
-    fun changeActiveRole(command: ChangeRoleCommand) {
+    fun changeActiveRole(command: ChangeRoleCommand) : UserRoleType {
         val user = userValidator.validateUserId(command.userId)
         user.hasRole(command.newRole)
         user.changeActiveRole(command.newRole)
         userRepository.save(user)
+        return user.activeRole
     }
 
 

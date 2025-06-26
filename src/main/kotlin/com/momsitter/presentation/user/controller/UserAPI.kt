@@ -1,6 +1,7 @@
 package com.momsitter.presentation.user.controller
 
 import com.momsitter.common.CustomApiResponse
+import com.momsitter.domain.user.UserRoleType
 import com.momsitter.presentation.user.dto.request.*
 import com.momsitter.presentation.user.dto.response.ExtendToParentResponse
 import com.momsitter.presentation.user.dto.response.ExtendToSitterResponse
@@ -38,19 +39,21 @@ interface UserAPI {
 
     @Operation(summary = "유저 기본 정보 수정", description = "이름, 이메일 정보를 수정합니다.")
     fun updateUserInfo(
-        @RequestAttribute("userId") userId: Long,
-        @Valid @RequestBody request: UpdateUserInfoRequest
+        request: HttpServletRequest,
+        @Valid updateUserDto: UpdateUserInfoRequest
     ): ResponseEntity<Void>
 
     @Operation(summary = "비밀번호 변경", description = "현재 비밀번호 확인 후 새 비밀번호로 변경합니다.")
     fun changePassword(
-        @RequestAttribute("userId") userId: Long,
-        @Valid @RequestBody request: ChangePasswordRequest
+        request: HttpServletRequest,
+        @Valid @RequestBody changePasswordDto: ChangePasswordRequest
     ): ResponseEntity<Void>
 
     @Operation(
         summary = "유저 역할 변경",
         description = "관리자 권한으로 유저의 역할을 변경합니다. (예: 부모 → 시터, 시터 → 부모)"
     )
-    fun changeRole(userId: Long, request: ChangeRoleRequest): ResponseEntity<Void>
+    fun changeRole(
+        request: HttpServletRequest,
+        changeRoleDto: ChangeRoleRequest): ResponseEntity<CustomApiResponse<UserRoleType>>
 }

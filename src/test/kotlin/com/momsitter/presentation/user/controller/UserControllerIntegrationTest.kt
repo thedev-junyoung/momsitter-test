@@ -18,6 +18,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.patch
 import org.springframework.test.web.servlet.post
 import java.time.LocalDate
@@ -411,6 +412,72 @@ class UserControllerIntegrationTest {
             }.andExpect {
                 status { is4xxClientError() }
                 jsonPath("$.message") { value(equalTo(ErrorCode.INVALID_PASSWORD.message))}
+            }
+        }
+    }
+    @Nested
+    @DisplayName("활성 역할 변경")
+    inner class ChangeActiveRole {
+
+        @Test
+        @DisplayName("보유한 역할로 활성 역할 변경 성공")
+        fun change_active_role_successfully() {
+            // given: 부모로 가입 후 시터 역할 확장
+            val username = "roleChangeUser"
+            val password = "pass123!"
+            val userId = testLoginHelper.createAndSaveParentUser(username, password)
+            val token = testLoginHelper.getAccessToken(username, password)
+
+            // 시터 역할 확장
+            val extendRequest = ExtendToSitterRequest(
+                minCareAge = 3,
+                maxCareAge = 6,
+                introduction = "다양한 아이 돌봄 경험 있음"
+            )
+            mockMvc.post("/api/v1/users/extend-role/sitter") {
+                header("Authorization", "Bearer $token")
+                contentType = MediaType.APPLICATION_JSON
+                content = objectMapper.writeValueAsString(extendRequest)
+            }.andExpect {
+                status { isOk() }
+            }
+
+            // when: 활성 역할을 SITTER로 변경
+            val changeRoleRequest = ChangeRoleRequest(newRole = "SITTER")
+            val result = mockMvc.patch("/api/v1/users/me/role") {
+                header("Authorization", "Bearer $token")
+                contentType = MediaType.APPLICATION_JSON
+                content = objectMapper.writeValueAsString(changeRoleRequest)
+            }.andExpect {
+                status { isOk() }
+                jsonPath("$.status") { value("SUCCESS") }
+            }.andReturn()
+
+            // then: 응답 데이터에서 activeRole 직접 확인
+            val responseJson = objectMapper.readTree(result.response.contentAsString)
+            val changedRole = responseJson["data"]?.asText()
+            assertThat(changedRole).isEqualTo("SITTER")
+        }
+
+
+        @Test
+        @DisplayName("보유하지 않은 역할로 변경 시 실패")
+        fun change_active_role_to_unassigned_should_fail() {
+            // given: 부모로 가입
+            val username = "onlyParent"
+            val password = "pass123!"
+            val userId = testLoginHelper.createAndSaveParentUser(username, password)
+            val token = testLoginHelper.getAccessToken(username, password)
+
+            // when: SITTER로 변경 시도 (보유하지 않음)
+            val changeRoleRequest = ChangeRoleRequest(newRole = "SITTER")
+            mockMvc.patch("/api/v1/users/me/role") {
+                header("Authorization", "Bearer $token")
+                contentType = MediaType.APPLICATION_JSON
+                content = objectMapper.writeValueAsString(changeRoleRequest)
+            }.andExpect {
+                status { is4xxClientError() }
+                jsonPath("$.message") { value(equalTo(ErrorCode.ROLE_NOT_FOUND.message)) }
             }
         }
     }

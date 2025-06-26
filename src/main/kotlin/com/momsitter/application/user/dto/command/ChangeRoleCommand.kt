@@ -10,7 +10,7 @@ data class ChangeRoleCommand(
         fun of(userId: Long, newRole: String): ChangeRoleCommand {
             return ChangeRoleCommand(
                 userId = userId,
-                newRole = UserRoleType.valueOf(newRole.uppercase())
+                newRole = UserRoleType.from(newRole)
             )
         }
     }

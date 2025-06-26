@@ -11,6 +11,7 @@ import com.momsitter.application.user.dto.result.SignUpResult
 import com.momsitter.application.user.service.UpdateUserInfoCommand
 import com.momsitter.common.CustomApiResponse
 import com.momsitter.domain.child.ChildInfo
+import com.momsitter.domain.user.UserRoleType
 import com.momsitter.presentation.user.dto.request.*
 import com.momsitter.presentation.user.dto.response.ExtendToParentResponse
 import com.momsitter.presentation.user.dto.response.ExtendToSitterResponse
@@ -75,37 +76,48 @@ class UserController(
     }
 
     @PatchMapping("/me/info")
-    override fun updateUserInfo(userId: Long, request: UpdateUserInfoRequest): ResponseEntity<Void> {
+    override fun updateUserInfo(
+        request: HttpServletRequest,
+        updateDto: UpdateUserInfoRequest): ResponseEntity<Void> {
+        val userId = request.getAttribute("userId") as Long
         userService.updateUserInfo(
             UpdateUserInfoCommand.of(
                 userId = userId,
-                name = request.name,
-                email = request.email
+                name = updateDto.name,
+                email = updateDto.email
             )
         )
         return ResponseEntity.noContent().build()
     }
 
     @PatchMapping("/me/password")
-    override fun changePassword(userId: Long, request: ChangePasswordRequest): ResponseEntity<Void> {
+    override fun changePassword(
+        request: HttpServletRequest,
+        changePasswordDto : ChangePasswordRequest
+    ): ResponseEntity<Void> {
+        val userId = request.getAttribute("userId") as Long
         userService.changePassword(
             ChangePasswordCommand.of(
                 userId = userId,
-                oldPassword = request.oldPassword,
-                newPassword = request.newPassword
+                oldPassword = changePasswordDto.oldPassword,
+                newPassword = changePasswordDto.newPassword
             )
         )
         return ResponseEntity.noContent().build()
     }
 
     @PatchMapping("/me/role")
-    override fun changeRole(userId: Long, request: ChangeRoleRequest): ResponseEntity<Void> {
-        userService.changeActiveRole(
+    override fun changeRole(
+        request: HttpServletRequest,
+        @RequestBody @Valid changeRoleDto: ChangeRoleRequest
+    ): ResponseEntity<CustomApiResponse<UserRoleType>> {
+        val userId = request.getAttribute("userId") as Long
+        val changedRole=userService.changeActiveRole(
             ChangeRoleCommand.of(
                 userId = userId,
-                newRole = request.newRole
+                newRole = changeRoleDto.newRole
             )
         )
-        return ResponseEntity.noContent().build()
+        return ResponseEntity.ok(CustomApiResponse.success(changedRole, "역할 변경 성공"))
     }
 }
