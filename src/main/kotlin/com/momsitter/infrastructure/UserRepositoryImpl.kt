@@ -67,5 +67,13 @@ class UserRepositoryImpl(
         return userJpaRepository.getUserRole(userId)
     }
 
+    override fun findUserWithParentAndChildren(userId: Long): User? {
+        return userJpaRepository.findUserWithParentAndChildren(userId)
+    }
+
+    override fun findUserWithSitterProfile(userId: Long): User? {
+        return userJpaRepository.findUserWithSitterProfile(userId)
+    }
+
 
 }

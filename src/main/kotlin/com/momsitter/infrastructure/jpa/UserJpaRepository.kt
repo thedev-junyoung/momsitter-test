@@ -28,4 +28,13 @@ interface UserJpaRepository : JpaRepository<User, Long> {
 
     @Query("SELECT u.activeRole FROM User u WHERE u.id = :userId")
     fun getUserRole(@Param("userId") userId: Long): UserRoleType?
+
+    @Query("""
+    SELECT u FROM User u
+    LEFT JOIN FETCH u.sitterProfile sp
+    WHERE u.id = :userId
+""")
+    fun findUserWithSitterProfile(@Param("userId") userId: Long): User?
+
+
 }

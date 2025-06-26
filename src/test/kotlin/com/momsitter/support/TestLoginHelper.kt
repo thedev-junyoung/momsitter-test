@@ -2,6 +2,7 @@ package com.momsitter.support
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.momsitter.domain.PasswordEncoder
+import com.momsitter.domain.sitter.SitterProfileInfo
 import com.momsitter.domain.user.Gender
 import com.momsitter.domain.user.User
 import com.momsitter.domain.user.UserRepository
@@ -45,4 +46,40 @@ class TestLoginHelper(
         user.parentProfile!!.addChild("아기테스트", LocalDate.of(2020, 5, 5), Gender.MALE)
         return userRepository.save(user).id
     }
+
+    fun createAndSaveParentWithChild(username: String, rawPassword: String): Long {
+        val user = User.signUpAsParentOnly(
+            username = username,
+            password = passwordEncoder.encode(rawPassword),
+            name = "부모테스트",
+            birthDate = LocalDate.of(1985, 3, 14),
+            gender = Gender.FEMALE,
+            email = "$username@example.com",
+            role = UserRoleType.PARENT,
+            activeRole = UserRoleType.PARENT
+        )
+        val child = user.parentProfile!!.addChild("아기테스트", LocalDate.of(2020, 1, 1), Gender.FEMALE)
+        userRepository.save(user)
+        return child.id
+    }
+
+    fun createAndSaveSitterUser(username: String, rawPassword: String): Long {
+        val user = User.signUpAsSitter(
+            username = username,
+            password = passwordEncoder.encode(rawPassword),
+            name = "시터테스트",
+            birthDate = LocalDate.of(1990, 2, 2),
+            gender = Gender.MALE,
+            email = "$username@example.com",
+            role = UserRoleType.SITTER,
+            activeRole = UserRoleType.SITTER,
+            sitterInfo = SitterProfileInfo(
+                minCareAge = 2,
+                maxCareAge = 6,
+                introduction = "안녕하세요, 저는 아이들을 사랑하는 시터입니다."
+            )
+        )
+        return userRepository.save(user).id
+    }
+
 }

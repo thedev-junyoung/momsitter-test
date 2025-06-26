@@ -14,4 +14,6 @@ interface UserRepository {
     fun findSitterUser(userId: Long): User?
     fun findParentUser(userId: Long): User?
     fun getUserRole(userId: Long): UserRoleType?
+    fun findUserWithParentAndChildren(userId: Long): User?
+    fun findUserWithSitterProfile(userId: Long): User?
 }
