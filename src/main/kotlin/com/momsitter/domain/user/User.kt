@@ -5,7 +5,6 @@ import com.momsitter.common.ErrorCode
 import com.momsitter.domain.child.ChildInfo
 import com.momsitter.domain.parent.ParentProfile
 import com.momsitter.domain.sitter.SitterProfile
-import com.momsitter.domain.sitter.SitterProfileInfo
 import jakarta.persistence.*
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
@@ -90,86 +89,7 @@ open class User protected constructor() {
     }
 
     companion object {
-        fun signUpAsSitter(
-            username: String,
-            password: String,
-            name: String,
-            birthDate: LocalDate,
-            gender: Gender,
-            email: String,
-            activeRole: UserRoleType,
-            role: UserRoleType,
-            sitterInfo: SitterProfileInfo
-        ): User {
-            val user = User(
-                username = username,
-                password = password,
-                name = name,
-                birthDate = birthDate,
-                gender = gender,
-                email = email,
-                activeRole = activeRole
-            )
-            user.addRole(role)
-            user.becomeSitter(sitterInfo.minCareAge, sitterInfo.maxCareAge, sitterInfo.introduction)
-            return user
-        }
 
-        fun signUpAsParentOnly(
-            username: String,
-            password: String,
-            name: String,
-            birthDate: LocalDate,
-            gender: Gender,
-            email: String,
-            activeRole: UserRoleType,
-            role: UserRoleType
-        ): User {
-            val user = User(
-                username = username,
-                password = password,
-                name = name,
-                birthDate = birthDate,
-                gender = gender,
-                email = email,
-                activeRole = activeRole
-            )
-//            user.assignRole(role)
-            user.addRole(role)
-            user.becomeParent()
-            return user
-        }
-
-        fun signUpAsParentWithChildren(
-            username: String,
-            password: String,
-            name: String,
-            birthDate: LocalDate,
-            gender: Gender,
-            email: String,
-            role: UserRoleType,
-            activeRole: UserRoleType,
-            children: List<ChildInfo>
-        ): User {
-            val user = User(
-                username = username,
-                password = password,
-                name = name,
-                birthDate = birthDate,
-                gender = gender,
-                email = email,
-                activeRole = activeRole
-
-            )
-//            user.assignRole(role)
-            user.addRole(role)
-            user.becomeParent()
-            val parentProfile = user.parentProfile ?: throw IllegalStateException("부모 프로필이 생성되지 않았습니다.")
-            children.forEach {
-                parentProfile.addChild(it.name, it.birthDate, it.gender)
-            }
-            return user
-        }
         fun dummy(): User = User(
             username = "dummy",
             password = "dummy",
@@ -228,10 +148,6 @@ open class User protected constructor() {
             this.email = email
         }
     }
-
-
-
-
     fun changeActiveRole(role: UserRoleType) {
         if (!hasRole(role)) {
             throw BusinessException("해당 역할이 없습니다", ErrorCode.ROLE_NOT_FOUND)
@@ -271,6 +187,14 @@ open class User protected constructor() {
         this.sitterProfile = profile
         if (!this.userRoles.contains(UserRole.of(this, UserRoleType.SITTER))) {
             this.addRole(UserRoleType.SITTER)
+            this.activeRole = UserRoleType.SITTER
+        }
+    }
+    fun assignParentProfile(profile: ParentProfile) {
+        this.parentProfile = profile
+        if (!this.userRoles.contains(UserRole.of(this, UserRoleType.PARENT))) {
+            this.addRole(UserRoleType.PARENT)
+            this.activeRole = UserRoleType.PARENT
         }
     }
 

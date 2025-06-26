@@ -8,7 +8,7 @@ import com.momsitter.application.user.dto.command.SignUpCommand
 import com.momsitter.application.user.dto.result.ExtendToParentResult
 import com.momsitter.application.user.dto.result.ExtendToSitterResult
 import com.momsitter.application.user.dto.result.SignUpResult
-import com.momsitter.application.user.factory.UserFactoryResolver
+import com.momsitter.application.user.factory.UserSignUpStrategy
 import com.momsitter.application.user.validator.SignUpValidator
 import com.momsitter.application.user.validator.UserValidator
 import com.momsitter.common.BusinessException
@@ -25,7 +25,7 @@ class UserService (
     private val userRepository: UserRepository,
     private val signUpValidator: SignUpValidator,
     private val userValidator: UserValidator,
-    private val userFactoryResolver: UserFactoryResolver,
+    private val strategies: List<UserSignUpStrategy>, // Spring이 자동 주입
     private val passwordEncoder: PasswordEncoder
 ){
     // 회원가입
@@ -38,16 +38,14 @@ class UserService (
         // 2. 비밀번호 암호화
         val encodedPassword = passwordEncoder.encode(command.rawPassword)
 
-        // 3. 역할 파싱 (단일 역할 가정)
-        val roleType = UserRoleType.valueOf(command.roles.uppercase())
+        // 3. 역할에 따른 사용자 생성
+        val strategy = strategies.find { it.supports(command.roles) }
+            ?: throw IllegalArgumentException("Unsupported role: ${command.roles}")
 
-        // 4. 역할별 팩토리 호출
-        val userFactory = userFactoryResolver.resolve(roleType)
-        val user = userFactory.create(command, encodedPassword, roleType)
 
-        // 5. 저장 및 반환
-        val savedUser = userRepository.save(user)
-        return SignUpResult.from(savedUser)
+        val user = strategy.create(command, encodedPassword)
+        userRepository.save(user)
+        return SignUpResult.from(user)
     }
 
     @Transactional
