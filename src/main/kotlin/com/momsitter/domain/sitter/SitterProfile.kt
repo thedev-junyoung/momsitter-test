@@ -16,6 +16,7 @@ import java.time.LocalDateTime
 @Entity
 @Table(name = "sitter_profiles")
 open class SitterProfile protected constructor() {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     open var id: Long = 0L
@@ -60,10 +61,34 @@ open class SitterProfile protected constructor() {
 
     companion object {
         fun of(user: User, minCareAge: Int, maxCareAge: Int, introduction: String): SitterProfile {
-            require(minCareAge <= maxCareAge) { "최소 연령은 최대 연령보다 클 수 없습니다." }
+            require(minCareAge <= maxCareAge) { "최소 나이는 최대 나이보다 작아야 합니다." }
             require(minCareAge > 0) { "케어 연령은 0보다 커야 합니다." }
             return SitterProfile(user, minCareAge, maxCareAge, introduction)
         }
     }
+    fun update(minCareAge: Int?, maxCareAge: Int?, introduction: String?) {
+        minCareAge?.let {
+            require(it > 0) { "케어 연령은 0보다 커야 합니다." }
+            if (maxCareAge != null) {
+                require(it <= maxCareAge) { "최소 나이는 최대 나이보다 작아야 합니다." }
+            }
+            this.minCareAge = it
+        }
+
+        maxCareAge?.let {
+            if (minCareAge != null) {
+                require(minCareAge <= it) { "최소 나이는 최대 나이보다 작아야 합니다." }
+            } else {
+                require(this.minCareAge <= it) { "최소 나이는 최대 나이보다 작아야 합니다." }
+            }
+            this.maxCareAge = it
+        }
+
+        introduction?.let {
+            this.introduction = it
+        }
+    }
+
+
 
 }
