@@ -18,7 +18,7 @@ open class UserRole protected constructor(
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    var role: UserRoleType = UserRoleType.DEFAULT
+    open var role: UserRoleType = UserRoleType.DEFAULT
 ) {
     companion object {
         fun of(user: User, role: UserRoleType): UserRole {
