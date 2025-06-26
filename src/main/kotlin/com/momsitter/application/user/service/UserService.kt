@@ -1,6 +1,7 @@
 package com.momsitter.application.user.service
 
 import com.momsitter.application.user.dto.ChangePasswordCommand
+import com.momsitter.application.user.dto.command.ChangeRoleCommand
 import com.momsitter.application.user.dto.command.ExtendToParentCommand
 import com.momsitter.application.user.dto.command.ExtendToSitterCommand
 import com.momsitter.application.user.dto.result.MyInfoResult
@@ -105,5 +106,14 @@ class UserService (
         user.updateInfo(command.name, command.email)
         userRepository.save(user)
     }
+
+    @Transactional
+    fun changeActiveRole(command: ChangeRoleCommand) {
+        val user = userValidator.validateUserId(command.userId)
+        user.hasRole(command.newRole)
+        user.changeActiveRole(command.newRole)
+        userRepository.save(user)
+    }
+
 
 }

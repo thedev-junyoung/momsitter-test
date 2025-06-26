@@ -4,6 +4,7 @@ import com.momsitter.common.BusinessException
 import com.momsitter.common.ErrorCode
 import com.momsitter.domain.child.ChildInfo
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.*
 import java.time.LocalDate
 
@@ -312,6 +313,39 @@ class UserTest {
             assertThat(user.password).isEqualTo(oldPassword) // 비밀번호는 변경되지 않아야 함
         }
 
+    }
+
+    @Nested
+    @DisplayName("User 도메인 - 활성 역할 변경 테스트")
+    inner class ChangeActiveRoleTest {
+
+        @Test
+        @DisplayName("역할이 존재할 경우 활성 역할을 변경할 수 있다")
+        fun change_active_role_successfully() {
+            // given
+            val user = TestUserFactory.sitterAndParentUser()  // ✅ 두 역할 다 가진 유저
+
+            val newRole = UserRoleType.PARENT
+
+            // when
+            user.changeActiveRole(newRole)
+
+            // then
+            assertThat(user.activeRole).isEqualTo(newRole)
+        }
+
+        @Test
+        @DisplayName("역할이 존재하지 않으면 활성 역할 변경 시 예외가 발생한다")
+        fun change_active_role_throws_exception_if_role_not_exist() {
+            // given
+            val user = TestUserFactory.sitterUser()
+            val newRole = UserRoleType.PARENT
+
+            // when & then
+            assertThatThrownBy { user.changeActiveRole(newRole) }
+                .isInstanceOf(BusinessException::class.java)
+                .hasMessageContaining("해당 역할이 없습니다.")
+        }
     }
 
 }

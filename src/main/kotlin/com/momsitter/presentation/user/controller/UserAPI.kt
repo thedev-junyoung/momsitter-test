@@ -47,4 +47,10 @@ interface UserAPI {
         @RequestAttribute("userId") userId: Long,
         @Valid @RequestBody request: ChangePasswordRequest
     ): ResponseEntity<Void>
+
+    @Operation(
+        summary = "유저 역할 변경",
+        description = "관리자 권한으로 유저의 역할을 변경합니다. (예: 부모 → 시터, 시터 → 부모)"
+    )
+    fun changeRole(userId: Long, request: ChangeRoleRequest): ResponseEntity<Void>
 }

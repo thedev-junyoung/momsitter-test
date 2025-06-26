@@ -36,9 +36,15 @@ object TestUserFactory {
             introduction = "유아교육과를 전공중인 대학생 시터입니다!"
         )
         user.assignSitterProfile(sitterProfile)
-        user.changeActiveRole(UserRoleType.SITTER)
         return user
     }
+
+    fun sitterAndParentUser(): User {
+        val user = sitterUser()  // 이미 SITTER 역할과 SitterProfile 포함
+        user.assignParentProfile(ParentProfile.of(user))
+        return user
+    }
+
 
 
 
@@ -93,5 +99,6 @@ object TestUserFactory {
         user.changeActiveRole(UserRoleType.PARENT)
         return user
     }
+
 
 }

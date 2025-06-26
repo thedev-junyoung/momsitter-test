@@ -2,6 +2,7 @@ package com.momsitter.presentation.user.controller
 
 
 import com.momsitter.application.user.dto.ChangePasswordCommand
+import com.momsitter.application.user.dto.command.ChangeRoleCommand
 import com.momsitter.application.user.dto.command.ExtendToParentCommand
 import com.momsitter.application.user.dto.command.ExtendToSitterCommand
 import com.momsitter.application.user.service.UserService
@@ -97,4 +98,14 @@ class UserController(
         return ResponseEntity.noContent().build()
     }
 
+    @PatchMapping("/me/role")
+    override fun changeRole(userId: Long, request: ChangeRoleRequest): ResponseEntity<Void> {
+        userService.changeActiveRole(
+            ChangeRoleCommand.of(
+                userId = userId,
+                newRole = request.newRole
+            )
+        )
+        return ResponseEntity.noContent().build()
+    }
 }

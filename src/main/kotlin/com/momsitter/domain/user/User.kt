@@ -150,7 +150,7 @@ open class User protected constructor() {
     }
     fun changeActiveRole(role: UserRoleType) {
         if (!hasRole(role)) {
-            throw BusinessException("해당 역할이 없습니다", ErrorCode.ROLE_NOT_FOUND)
+            throw BusinessException("해당 역할이 없습니다.", ErrorCode.ROLE_NOT_FOUND)
         }
         this.activeRole = role
     }
