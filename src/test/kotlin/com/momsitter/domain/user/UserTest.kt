@@ -3,7 +3,6 @@ package com.momsitter.domain.user
 import com.momsitter.common.BusinessException
 import com.momsitter.common.ErrorCode
 import com.momsitter.domain.child.ChildInfo
-import com.momsitter.domain.sitter.SitterProfileInfo
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.*
 import java.time.LocalDate
@@ -18,22 +17,17 @@ class UserTest {
         @Test
         @DisplayName("자기소개와 케어 연령이 포함된 시터 프로필과 함께 회원을 생성한다")
         fun create_sitter_user_with_profile() {
-            val sitterInfo = SitterProfileInfo(
-                minCareAge = 3,
-                maxCareAge = 5,
-                introduction = "유아교육과를 전공중인 대학생 시터입니다! 사촌 동생들을 많이 돌본 경험이 있어서 아이랑 잘 놀아줄 수 있어요."
-            )
 
-            val user = User.signUpAsSitter(
+            val user = TestUserFactory.createSitterUser(
                 username = "wonderfulPark0206",
                 password = "parak0206%^",
                 name = "박시터",
                 birthDate = LocalDate.of(1998, 2, 6),
                 gender = Gender.FEMALE,
                 email = "wonderfulPark0206@gmail.com",
-                role = UserRoleType.SITTER,
-                sitterInfo = sitterInfo,
-                activeRole = UserRoleType.SITTER
+                minCareAge = 3,
+                maxCareAge = 5,
+                introduction = "유아교육과를 전공중인 대학생 시터입니다! 사촌 동생들을 많이 돌본 경험이 있어서 아이랑 잘 놀아줄 수 있어요."
             )
 
             assertThat(user.isSitter()).isTrue()
@@ -49,15 +43,13 @@ class UserTest {
         @DisplayName("빈 부모 프로필과 역할을 포함한 부모 회원을 생성한다")
         fun create_parent_user_without_children() {
 
-            val user = User.signUpAsParentOnly(
+            val user = TestUserFactory.createParentOnlyUser(
                 username = "kimParent86",
                 password = "86!@Kim",
                 name = "박부모",
                 birthDate = LocalDate.of(1986, 10, 19),
                 gender = Gender.FEMALE,
                 email = "kim86@gmail.com",
-                role = UserRoleType.PARENT,
-                activeRole = UserRoleType.PARENT
             )
 
             assertThat(user.isParent()).isTrue()
@@ -77,16 +69,14 @@ class UserTest {
                 ChildInfo(name = "김아기", birthDate = LocalDate.of(2019, 5, 22), gender = Gender.MALE)
             )
 
-            val user = User.signUpAsParentWithChildren(
+            val user = TestUserFactory.createParentWithChildrenUser(
                 username = "kimParent86",
                 password = "86!@Kim",
                 name = "박부모",
                 birthDate = LocalDate.of(1986, 10, 19),
                 gender = Gender.FEMALE,
                 email = "kim86@gmail.com",
-                role = UserRoleType.PARENT,
                 children = children,
-                activeRole = UserRoleType.PARENT
             )
 
             assertThat(user.isParent()).isTrue()
@@ -181,8 +171,7 @@ class UserTest {
             val user = TestUserFactory.sitterUser()
 
             val exception = assertThrows<BusinessException> {
-                user.addRole(UserRoleType.SITTER)
-            }
+                user.addRole(UserRoleType.SITTER)            }
 
             assertThat(exception.message).contains(ErrorCode.DUPLICATE_ROLE.message)
         }

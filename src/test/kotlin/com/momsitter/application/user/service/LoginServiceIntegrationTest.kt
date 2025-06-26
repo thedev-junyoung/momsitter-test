@@ -39,15 +39,13 @@ class LoginServiceIntegrationTest {
         val encoded = passwordEncoder.encode(rawPassword)
 
         val user = userRepository.save(
-            User.signUpAsParentOnly(
+            TestUserFactory.createParentOnlyUser(
                 username = "loginUser",
                 password = encoded,
                 name = "로그인유저",
                 birthDate = LocalDate.of(1995, 5, 5),
                 gender = Gender.FEMALE,
                 email = "login@example.com",
-                role = UserRoleType.PARENT,
-                activeRole = UserRoleType.PARENT
             )
         )
 

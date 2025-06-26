@@ -3,7 +3,6 @@ package com.momsitter.application.user.validator
 import com.momsitter.common.BusinessException
 import com.momsitter.domain.PasswordEncoder
 import com.momsitter.domain.user.*
-import com.momsitter.domain.user.User.Companion.signUpAsParentOnly
 import io.mockk.every
 import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
@@ -29,15 +28,13 @@ class LoginValidatorTest {
         username: String = "sitter123",
         password: String = "encoded-password"
     ): User {
-        return signUpAsParentOnly(
+        return TestUserFactory.createParentOnlyUser(
             username = username,
             password = password,
             name = "테스트유저",
             birthDate = LocalDate.of(1990, 1, 1),
             gender = Gender.FEMALE,
             email = "test@example.com",
-            role = UserRoleType.PARENT,
-            activeRole = UserRoleType.PARENT
         )
     }
 

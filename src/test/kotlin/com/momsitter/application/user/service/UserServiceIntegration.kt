@@ -10,6 +10,7 @@ import com.momsitter.domain.child.ChildInfo
 import com.momsitter.domain.parent.ParentProfileInfo
 import com.momsitter.domain.sitter.SitterProfileInfo
 import com.momsitter.domain.user.Gender
+import com.momsitter.domain.user.TestUserFactory
 import com.momsitter.domain.user.User
 import com.momsitter.domain.user.UserRepository
 import com.momsitter.domain.user.UserRoleType
@@ -326,15 +327,13 @@ class UserServiceIntegration(
         @DisplayName("유저 정보 수정이 정상적으로 이루어진다")
         fun update_user_info_success() {
             // given
-            val user = User.signUpAsParentOnly(
+            val user = TestUserFactory.createParentOnlyUser(
                 username = "updateUser",
                 password = "pwd123!",
                 name = "기존이름",
                 birthDate = LocalDate.of(1990, 1, 1),
                 gender = Gender.FEMALE,
                 email = "old@example.com",
-                role = UserRoleType.PARENT,
-                activeRole = UserRoleType.PARENT
             )
             val saved = userRepository.save(user)
 
@@ -357,15 +356,13 @@ class UserServiceIntegration(
         fun change_password_successfully() {
             val oldPassword = "oldPassword!"
             // given
-            val user = User.signUpAsParentOnly(
+            val user = TestUserFactory.createParentOnlyUser(
                 username = "pwuser",
                 password = passwordEncoder.encode(oldPassword),
                 name = "비번유저",
                 birthDate = LocalDate.of(1991, 1, 1),
                 gender = Gender.FEMALE,
                 email = "pw@example.com",
-                role = UserRoleType.PARENT,
-                activeRole = UserRoleType.PARENT
             )
             val savedUser = userRepository.save(user)
 

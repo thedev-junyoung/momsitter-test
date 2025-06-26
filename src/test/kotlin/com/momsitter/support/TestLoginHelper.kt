@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.momsitter.domain.PasswordEncoder
 import com.momsitter.domain.sitter.SitterProfileInfo
 import com.momsitter.domain.user.Gender
+import com.momsitter.domain.user.TestUserFactory
 import com.momsitter.domain.user.User
 import com.momsitter.domain.user.UserRepository
 import com.momsitter.domain.user.UserRoleType
@@ -33,30 +34,26 @@ class TestLoginHelper(
     }
 
     fun createAndSaveParentUser(username: String, rawPassword: String): Long {
-        val user = User.signUpAsParentOnly(
+        val user = TestUserFactory.createParentOnlyUser(
             username = username,
             password = passwordEncoder.encode(rawPassword),
             name = "테스트부모",
             birthDate = LocalDate.of(1980, 1, 1),
             gender = Gender.FEMALE,
             email = "$username@example.com",
-            role = UserRoleType.PARENT,
-            activeRole = UserRoleType.PARENT
         )
         user.parentProfile!!.addChild("아기테스트", LocalDate.of(2020, 5, 5), Gender.MALE)
         return userRepository.save(user).id
     }
 
     fun createAndSaveParentWithChild(username: String, rawPassword: String): Long {
-        val user = User.signUpAsParentOnly(
+        val user = TestUserFactory.createParentOnlyUser(
             username = username,
             password = passwordEncoder.encode(rawPassword),
             name = "부모테스트",
             birthDate = LocalDate.of(1985, 3, 14),
             gender = Gender.FEMALE,
             email = "$username@example.com",
-            role = UserRoleType.PARENT,
-            activeRole = UserRoleType.PARENT
         )
         val child = user.parentProfile!!.addChild("아기테스트", LocalDate.of(2020, 1, 1), Gender.FEMALE)
         userRepository.save(user)
@@ -64,20 +61,13 @@ class TestLoginHelper(
     }
 
     fun createAndSaveSitterUser(username: String, rawPassword: String): Long {
-        val user = User.signUpAsSitter(
+        val user = TestUserFactory.createSitterUser(
             username = username,
             password = passwordEncoder.encode(rawPassword),
             name = "시터테스트",
             birthDate = LocalDate.of(1990, 2, 2),
             gender = Gender.MALE,
             email = "$username@example.com",
-            role = UserRoleType.SITTER,
-            activeRole = UserRoleType.SITTER,
-            sitterInfo = SitterProfileInfo(
-                minCareAge = 2,
-                maxCareAge = 6,
-                introduction = "안녕하세요, 저는 아이들을 사랑하는 시터입니다."
-            )
         )
         return userRepository.save(user).id
     }

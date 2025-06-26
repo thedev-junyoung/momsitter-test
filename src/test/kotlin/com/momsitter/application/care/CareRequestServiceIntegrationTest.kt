@@ -4,6 +4,7 @@ import com.momsitter.application.care.dto.CreateCareRequestCommand
 import com.momsitter.application.care.dto.UpdateCareRequestCommand
 import com.momsitter.domain.care.CareRequestRepository
 import com.momsitter.domain.user.Gender
+import com.momsitter.domain.user.TestUserFactory
 import com.momsitter.domain.user.User
 import com.momsitter.domain.user.UserRoleType
 import com.momsitter.domain.user.UserRepository
@@ -40,15 +41,13 @@ class CareRequestServiceIntegrationTest {
     @DisplayName("돌봄 요청을 생성할 수 있다")
     fun should_createCareRequest() {
         // given
-        val parent = User.signUpAsParentOnly(
+        val parent = TestUserFactory.createParentOnlyUser(
             username = "parentUser",
             password = "pass1234!",
             name = "엄마",
             birthDate = LocalDate.of(1985, 5, 5),
             gender = Gender.FEMALE,
             email = "parent@example.com",
-            role = UserRoleType.PARENT,
-            activeRole = UserRoleType.PARENT
         )
         parent.parentProfile!!.addChild("아이1", LocalDate.of(2020, 1, 1), Gender.MALE)
         val savedUser = userRepository.save(parent)
@@ -69,15 +68,13 @@ class CareRequestServiceIntegrationTest {
     @DisplayName("돌봄 요청을 수정할 수 있다")
     fun should_updateCareRequest() {
         // given
-        val parent = User.signUpAsParentOnly(
+        val parent = TestUserFactory.createParentOnlyUser(
             username = "parentUser",
             password = "pass1234!",
             name = "엄마",
             birthDate = LocalDate.of(1985, 5, 5),
             gender = Gender.FEMALE,
             email = "parent@example.com",
-            role = UserRoleType.PARENT,
-            activeRole = UserRoleType.PARENT
         )
         val profile = parent.parentProfile!!
         profile.addChild("아이1", LocalDate.of(2020, 1, 1), Gender.FEMALE)
