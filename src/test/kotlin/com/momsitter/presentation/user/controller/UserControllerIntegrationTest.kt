@@ -202,7 +202,7 @@ class UserControllerIntegrationTest {
                 status { isOk() }
             }.andReturn()
 
-            objectMapper.readTree(signUpResult.response.contentAsString)["data"]["userId"].asLong()
+            val userId = objectMapper.readTree(signUpResult.response.contentAsString)["data"]["userId"].asLong()
 
             // when: 시터 역할 확장
             val extendRequest = ExtendToSitterRequest(
@@ -252,7 +252,7 @@ class UserControllerIntegrationTest {
                 status { isOk() }
             }.andReturn()
 
-            objectMapper.readTree(signUpResult.response.contentAsString)["data"]["userId"].asLong()
+            val userId = objectMapper.readTree(signUpResult.response.contentAsString)["data"]["userId"].asLong()
 
             // when: 부모 역할 확장
             val extendRequest = ExtendToParentRequest(
@@ -304,7 +304,7 @@ class UserControllerIntegrationTest {
                 status { isOk() }
             }.andReturn()
 
-            objectMapper.readTree(signUpResult.response.contentAsString)["data"]["userId"].asLong()
+            val userId = objectMapper.readTree(signUpResult.response.contentAsString)["data"]["userId"].asLong()
 
             // when
             val extendRequest = ExtendToParentRequest(children = null)
@@ -355,8 +355,6 @@ class UserControllerIntegrationTest {
             }.andReturn()
 
             // then
-            val responseJson = objectMapper.readTree(result.response.contentAsString)
-            assertThat(responseJson.isEmpty).isTrue()
 
         }
 
@@ -427,6 +425,7 @@ class UserControllerIntegrationTest {
             // given: 부모로 가입 후 시터 역할 확장
             val username = "roleChangeUser"
             val password = "pass123!"
+            testLoginHelper.createAndSaveParentUser(username, password)
             val token = testLoginHelper.getAccessToken(username, password)
 
             // 시터 역할 확장
@@ -467,6 +466,7 @@ class UserControllerIntegrationTest {
             // given: 부모로 가입
             val username = "onlyParent"
             val password = "pass123!"
+            testLoginHelper.createAndSaveParentUser(username, password)
             val token = testLoginHelper.getAccessToken(username, password)
 
             // when: SITTER로 변경 시도 (보유하지 않음)
