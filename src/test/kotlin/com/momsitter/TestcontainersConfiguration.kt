@@ -19,7 +19,6 @@ class TestcontainersConfiguration {
                 .withDatabaseName("momsitter")
                 .withUsername("momsitter")
                 .withPassword("momsitter")
-                .withInitScript("init.sql")
                 .apply { start() }
 
         init {
