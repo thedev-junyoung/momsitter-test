@@ -52,7 +52,7 @@ class UserController(
         @RequestBody @Valid requestDto: ExtendToSitterRequest
     ): ResponseEntity<CustomApiResponse<ExtendToSitterResponse>> {
         val userId = request.getAttribute("userId") as Long
-        val command = ExtendToSitterCommand(userId, requestDto.minCareAge, requestDto.maxCareAge, requestDto.introduction)
+        val command = ExtendToSitterCommand.of(userId, requestDto.minCareAge, requestDto.maxCareAge, requestDto.introduction)
         val result = userService.extendToSitter(command)
 
         return ResponseEntity.ok(CustomApiResponse.success(ExtendToSitterResponse.from(result), "시터 역할 확장 성공"))
