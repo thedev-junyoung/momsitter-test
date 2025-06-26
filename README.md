@@ -49,13 +49,13 @@ ParentProfile (1) — (N) CareRequests
 
 | 계층 | 기술 |
 | --- | --- |
-| 언어 | Kotlin 1.9 |
-| 프레임워크 | Spring Boot 3.x |
-| 빌드 | Gradle (KTS) |
-| DB | MySQL 8.x |
-| API 문서화 | SwaggerHub (OpenAPI 3.0) |
-| 테스트 | JUnit5, MockMvc, Testcontainers |
-| 인증 | JWT (자체 구현) |
+| 언어 | Kotlin 1.9.25 |
+| 빌드 | Gradle (Kotlin DSL) |
+| 프레임워크 | Spring Boot 3.5.3 |
+| 데이터베이스 | MySQL 8.0.42 |
+| API 문서화 | SwaggerHub(OpenAPI 3.0) + springdoc-openapi |
+| 인증 | JWT (io.jsonwebtoken:jjwt) |
+| 테스트 | JUnit5 + MockMvc + Testcontainers |
 
 ---
 
@@ -120,9 +120,11 @@ ParentProfile (1) — (N) CareRequests
 | 애플리케이션 | 통합 테스트 | 서비스 단위에서 DB와 함께 흐름 검증 |
 | 프레젠테이션 | E2E 테스트 | `@SpringBootTest` + `MockMvc`를 활용한 실제 API 호출 시나리오 테스트 |
 
+---
+
 ### 테스트 커버리지
 
-HTNL문서: [htmlReport/index.html](docs/test-report/htmlReport/index.html)
+HTML 문서: [htmlReport/index.html](docs/test-report/htmlReport/index.html)
 
 | 측정 항목 | 수치 |
 | --- | --- |
@@ -133,6 +135,8 @@ HTNL문서: [htmlReport/index.html](docs/test-report/htmlReport/index.html)
 
 테스트를 통해 로직 누락 및 그레이존을 줄이고, 사소한 변경에도 API 이상 여부를 즉시 감지할 수 있도록 구성했습니다.
 
+---
+
 ## 외부 의존성
 - `jackson-module-kotlin`: Kotlin의 non-null, data class 구조를 JSON 직렬화/역직렬화에 자연스럽게 매핑하기 위해 사용
 - `org.mindrot:jbcrypt`: 사용자 비밀번호를 안전하게 해싱하기 위한 목적으로 `BCrypt` 알고리즘 사용
@@ -142,3 +146,70 @@ HTNL문서: [htmlReport/index.html](docs/test-report/htmlReport/index.html)
 - `testcontainers:mysql`: 실제 MySQL 환경과 유사한 조건에서의 통합 테스트 수행을 위해 사용
 - `spring-boot-testcontainers`: Testcontainers를 Spring 환경과 자동 연동하여, 더 간편하게 테스트 컨테이너를 관리하기 위해 사용
 
+## 실행 방법
+
+### 1. 프로젝트 클론
+
+```bash
+git clone https://github.com/thedev-junyoung/momsitter-test.git
+cd momsitter-test
+```
+
+---
+
+### 2. 실행 전 준비사항
+
+- 기술스택 참고
+- `application.yml` 등 추가 설정 파일은 필요하지 않음
+
+---
+
+### 3. DB (MySQL) 실행
+
+> Testcontainers를 사용하므로 docker compose로 MySQL을 띄우지 않아도 테스트는 가능합니다.
+>
+>
+> 하지만 **로컬 실행(Spring Boot 실행)** 을 위해선 다음 명령으로 MySQL 컨테이너를 실행해야 합니다:
+>
+
+```bash
+docker compose up -d
+```
+
+---
+
+### 4. 테스트 실행
+
+> 테스트는 내부적으로 Testcontainers를 활용하여 MySQL 컨테이너를 자동으로 띄워 수행됩니다.
+>
+
+```bash
+./gradlew test
+```
+
+---
+
+### 5. 서버 실행
+
+> 로컬에서 Spring Boot 앱을 실행하려면 다음 명령어를 입력하세요:
+>
+
+```bash
+./gradlew bootRun
+```
+
+---
+
+### 6. API 문서 (Swagger)
+
+- 브라우저에서 다음 URL로 접속하여 API 명세 확인 가능:
+
+```
+<http://localhost:8080/swagger-ui/index.html>
+```
+
+또는
+
+- SwaggerHub 공개 문서: [momsitter-api](https://app.swaggerhub.com/apis-docs/JUNYOUNGJEON/momsitter-test/1.0.0)
+
+---
