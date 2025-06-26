@@ -2,19 +2,21 @@ package com.momsitter.application.user.dto.result
 
 import com.momsitter.domain.child.Child
 import com.momsitter.domain.user.User
+import com.momsitter.domain.user.UserRole
+import com.momsitter.domain.user.UserRoleType
 import java.time.LocalDate
 
 data class ExtendToParentResult(
     val userId: Long,
-    val roles: List<String>,
+    val roles: Set<UserRoleType>,
     val parentProfile: ParentProfileResult?
 ) {
     companion object {
         fun from(user: User): ExtendToParentResult {
             return ExtendToParentResult(
                 userId = user.id,
-                roles = user.roles.map { it.name },
-                parentProfile = user.parentProfile?.let {
+                roles = user.userRoles.map { it.role }.toSet(),
+                        parentProfile = user.parentProfile?.let {
                     ParentProfileResult.from(it.children)
                 }
             )

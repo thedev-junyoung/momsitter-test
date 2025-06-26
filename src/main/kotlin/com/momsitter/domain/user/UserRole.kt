@@ -13,16 +13,19 @@ open class UserRole protected constructor(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    open val user: User,
+    open var user: User? = null,
+
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "role", nullable = false)
-    open val role: UserRoleType
+    @Column(nullable = false)
+    var role: UserRoleType = UserRoleType.DEFAULT
 ) {
     companion object {
         fun of(user: User, role: UserRoleType): UserRole {
-            return UserRole(user = user, role = role)
-        }
+            return UserRole().apply {
+                this.user = user
+                this.role = role
+            }        }
     }
 
     protected constructor() : this(

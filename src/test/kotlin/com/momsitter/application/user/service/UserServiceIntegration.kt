@@ -239,7 +239,8 @@ class UserServiceIntegration(
             // then
             assertThat(result.sitterProfile).isNotNull
             assertThat(result.sitterProfile?.careAgeRange).isEqualTo("2세 ~ 6세")
-            assertThat(result.roles).contains("PARENT", "SITTER")
+            assertThat(result.roles).contains(UserRoleType.PARENT, UserRoleType.SITTER)
+
         }
 
         @Test
@@ -275,7 +276,8 @@ class UserServiceIntegration(
             // then
             assertThat(result.parentProfile).isNotNull
             assertThat(result.parentProfile?.children).isEmpty()
-            assertThat(result.roles).contains("SITTER", "PARENT")
+            assertThat(result.roles).contains(UserRoleType.PARENT, UserRoleType.SITTER)
+
         }
 
         @Test
@@ -311,7 +313,8 @@ class UserServiceIntegration(
             assertThat(result.parentProfile).isNotNull
             assertThat(result.parentProfile?.children?.size).isEqualTo(2)
             assertThat(result.parentProfile?.children?.map { it.name }).containsExactly("준호", "수아")
-            assertThat(result.roles).contains("SITTER", "PARENT")
+            assertThat(result.roles).contains(UserRoleType.PARENT, UserRoleType.SITTER)
+
         }
     }
 

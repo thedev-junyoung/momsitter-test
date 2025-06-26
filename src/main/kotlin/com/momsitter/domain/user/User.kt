@@ -57,11 +57,9 @@ open class User protected constructor() {
     open var updatedAt: LocalDateTime = LocalDateTime.now()
         protected set
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "user_roles", joinColumns = [JoinColumn(name = "user_id")])
-    @Column(name = "role")
-    @Enumerated(EnumType.STRING)
-    open val roles: MutableSet<UserRoleType> = mutableSetOf()
+    @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.LAZY)
+    open val userRoles: MutableSet<UserRole> = mutableSetOf()
+
 
 
     // 양방향 관계
@@ -112,7 +110,7 @@ open class User protected constructor() {
                 email = email,
                 activeRole = activeRole
             )
-            user.assignRole(role)
+            user.addRole(role)
             user.becomeSitter(sitterInfo.minCareAge, sitterInfo.maxCareAge, sitterInfo.introduction)
             return user
         }
@@ -136,7 +134,8 @@ open class User protected constructor() {
                 email = email,
                 activeRole = activeRole
             )
-            user.assignRole(role)
+//            user.assignRole(role)
+            user.addRole(role)
             user.becomeParent()
             return user
         }
@@ -162,7 +161,8 @@ open class User protected constructor() {
                 activeRole = activeRole
 
             )
-            user.assignRole(role)
+//            user.assignRole(role)
+            user.addRole(role)
             user.becomeParent()
             val parentProfile = user.parentProfile ?: throw IllegalStateException("부모 프로필이 생성되지 않았습니다.")
             children.forEach {
@@ -179,64 +179,36 @@ open class User protected constructor() {
             email = "dummy@dummy.com",
             activeRole = UserRoleType.DEFAULT
         )
+
+        fun basicUser(
+            username: String,
+            password: String,
+            name: String,
+            birthDate: LocalDate,
+            gender: Gender,
+            email: String,
+        ) : User {
+            return User(
+                username = username,
+                password = password,
+                name = name,
+                birthDate = birthDate,
+                gender = gender,
+                email = email,
+                activeRole = UserRoleType.DEFAULT
+
+            )
+
+
+        }
     }
 
     // 비즈니스 메서드
-    fun becomeSitter(minCareAge: Int, maxCareAge: Int, introduction: String) {
-        if (sitterProfile == null) {
-            sitterProfile = SitterProfile.of(this, minCareAge, maxCareAge, introduction)
-        }
-    }
 
-    fun becomeParent() {
-        if (parentProfile == null) {
-            parentProfile = ParentProfile.of(this)
-        }
-    }
-
-    fun assignRole(role: UserRoleType) {
-        roles.add(role)
-    }
 
     fun isSitter(): Boolean = sitterProfile != null
     fun isParent(): Boolean = parentProfile != null
 
-    fun hasRole(roleType: UserRoleType): Boolean {
-        return roles.contains(roleType)
-    }
-
-    fun addRole(role: UserRole) {
-        if (this.hasRole(role.role)) {
-            throw BusinessException("이미 해당 역할을 가지고 있습니다.", ErrorCode.DUPLICATE_ROLE)
-        }
-        this.roles.add(role.role)
-        this.activeRole = role.role
-    }
-
-    fun extendToSitter(minAge: Int, maxAge: Int, introduction: String) {
-        if (this.hasRole(UserRoleType.SITTER)) {
-            throw BusinessException("이미 시터 역할을 가지고 있습니다.", ErrorCode.DUPLICATE_ROLE)
-        }
-
-        val sitterProfile = SitterProfile.of(this, minAge, maxAge, introduction)
-        this.addRole(UserRole.of(this, UserRoleType.SITTER))
-        this.sitterProfile = sitterProfile
-    }
-
-    fun extendToParent(children: List<ChildInfo>) {
-        if (!hasRole(UserRoleType.PARENT)) {
-            this.addRole(UserRole.of(this, UserRoleType.PARENT))
-        }
-
-        if (this.parentProfile == null) {
-            this.parentProfile = ParentProfile.of(this)
-        }
-
-        children.forEach { info ->
-            this.parentProfile!!.addChild(info.name, info.birthDate, info.gender)
-        }
-
-    }
 
     fun changePassword(newPassword: String) {
         if (newPassword.isBlank()) {
@@ -256,6 +228,78 @@ open class User protected constructor() {
             this.email = email
         }
     }
+
+
+
+
+    fun changeActiveRole(role: UserRoleType) {
+        if (!hasRole(role)) {
+            throw BusinessException("해당 역할이 없습니다", ErrorCode.ROLE_NOT_FOUND)
+        }
+        this.activeRole = role
+    }
+
+
+
+    fun hasRole(role: UserRoleType): Boolean {
+        return userRoles.any { it.role == role }
+    }
+
+    fun addRole(role: UserRoleType) {
+        if (hasRole(role)) throw BusinessException("이미 존재하는 역할입니다.", ErrorCode.DUPLICATE_ROLE)
+        this.userRoles.add(UserRole.of(this, role))
+    }
+
+    fun removeRole(role: UserRoleType) {
+        this.userRoles.removeIf { it.role == role }
+    }
+
+
+    fun becomeSitter(minCareAge: Int, maxCareAge: Int, introduction: String) {
+        if (sitterProfile == null) {
+            sitterProfile = SitterProfile.of(this, minCareAge, maxCareAge, introduction)
+        }
+    }
+
+    fun becomeParent() {
+        if (parentProfile == null) {
+            parentProfile = ParentProfile.of(this)
+        }
+    }
+
+    fun assignSitterProfile(profile: SitterProfile) {
+        this.sitterProfile = profile
+        if (!this.userRoles.contains(UserRole.of(this, UserRoleType.SITTER))) {
+            this.addRole(UserRoleType.SITTER)
+        }
+    }
+
+    fun extendToSitter(minAge: Int, maxAge: Int, introduction: String) {
+        if (this.hasRole(UserRoleType.SITTER)) {
+            throw BusinessException("이미 시터 역할을 가지고 있습니다.", ErrorCode.DUPLICATE_ROLE)
+        }
+
+        val sitterProfile = SitterProfile.of(this, minAge, maxAge, introduction)
+        this.addRole( UserRoleType.SITTER)
+        this.sitterProfile = sitterProfile
+    }
+
+    fun extendToParent(children: List<ChildInfo>) {
+        if (!hasRole(UserRoleType.PARENT)) {
+            this.addRole( UserRoleType.PARENT)
+        }
+
+        if (this.parentProfile == null) {
+            this.parentProfile = ParentProfile.of(this)
+        }
+        changeActiveRole(UserRoleType.PARENT)
+
+        children.forEach { info ->
+            this.parentProfile!!.addChild(info.name, info.birthDate, info.gender)
+        }
+
+    }
+
 
 
 }

@@ -1,6 +1,7 @@
 package com.momsitter.domain.user
 
 import com.momsitter.common.BusinessException
+import com.momsitter.common.ErrorCode
 import com.momsitter.domain.child.ChildInfo
 import com.momsitter.domain.sitter.SitterProfileInfo
 import org.assertj.core.api.Assertions.assertThat
@@ -169,7 +170,7 @@ class UserTest {
         fun add_role() {
             val user = TestUserFactory.parentOnlyUser()
 
-            user.addRole(UserRole.of(user, UserRoleType.SITTER))
+            user.addRole(UserRoleType.SITTER)
 
             assertThat(user.hasRole(UserRoleType.SITTER)).isTrue()
         }
@@ -180,10 +181,10 @@ class UserTest {
             val user = TestUserFactory.sitterUser()
 
             val exception = assertThrows<BusinessException> {
-                user.addRole(UserRole.of(user, UserRoleType.SITTER))
+                user.addRole(UserRoleType.SITTER)
             }
 
-            assertThat(exception.message).contains("이미 해당 역할을 가지고 있습니다.")
+            assertThat(exception.message).contains(ErrorCode.DUPLICATE_ROLE.message)
         }
     }
     @Nested

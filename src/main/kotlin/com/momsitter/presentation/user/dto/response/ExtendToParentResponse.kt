@@ -1,6 +1,8 @@
 package com.momsitter.presentation.user.dto.response
 
 import com.momsitter.application.user.dto.result.ExtendToParentResult
+import com.momsitter.domain.user.UserRole
+import com.momsitter.domain.user.UserRoleType
 import io.swagger.v3.oas.annotations.media.Schema
 
 @Schema(description = "부모 역할 확장 응답")
@@ -9,7 +11,7 @@ data class ExtendToParentResponse(
     val userId: Long,
 
     @Schema(description = "현재 보유 역할 목록")
-    val roles: List<String>,
+    val roles: Set<UserRoleType>,
 
     @Schema(description = "자녀 목록")
     val children: List<ChildResponse>
