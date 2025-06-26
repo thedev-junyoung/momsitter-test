@@ -2,73 +2,48 @@ package com.momsitter.presentation.user.dto.request
 
 import com.momsitter.domain.user.Gender
 import io.swagger.v3.oas.annotations.media.Schema
+import jakarta.validation.Valid
 import jakarta.validation.constraints.*
 import java.time.LocalDate
 
-@Schema(description = "회원가입 요청")
+@Schema(description = "회원가입 요청 DTO")
 data class SignupRequest(
+
+    @field:NotBlank(message = "아이디는 필수입니다.")
     @Schema(description = "아이디", example = "wonderfulPark0206")
-    @field:NotBlank
     val username: String,
 
+    @field:NotBlank(message = "비밀번호는 필수입니다.")
     @Schema(description = "비밀번호", example = "parak0206%^")
-    @field:NotBlank
     val password: String,
 
+    @field:NotBlank(message = "이름은 필수입니다.")
     @Schema(description = "이름", example = "박시터")
-    @field:NotBlank
     val name: String,
 
-    @Schema(description = "생년월일", example = "1998-02-06")
-    @field:NotNull
+    @field:NotNull(message = "생년월일은 필수입니다.")
+    @Schema(description = "생년월일", example = "1998-02-06", type = "string", format = "date")
     val birthDate: LocalDate,
 
-    @Schema(description = "성별", example = "FEMALE")
-    @field:NotBlank
+    @field:NotBlank(message = "성별은 필수입니다.")
+    @Schema(description = "성별", example = "FEMALE", allowableValues = ["MALE", "FEMALE"])
     val gender: String,
 
+    @field:Email(message = "이메일 형식이 올바르지 않습니다.")
     @Schema(description = "이메일", example = "wonderfulPark0206@gmail.com")
-    @field:Email
     val email: String,
 
-    @Schema(description = "역할", example = "SITTER, PARENT")
-    @field:NotBlank
+    @field:NotBlank(message = "역할은 필수입니다.")
+    @Schema(description = "역할 (콤마로 구분된 문자열)", example = "SITTER,PARENT", allowableValues = ["SITTER", "PARENT"])
     val roles: String,
 
+    @field:Valid
     @Schema(description = "시터 정보", nullable = true)
     val sitter: SitterInfoRequest? = null,
 
+    @field:Valid
     @Schema(description = "부모 정보", nullable = true)
     val parent: ParentInfoRequest? = null,
 )
 
-data class SitterInfoRequest(
-    @Schema(description = "케어 가능 최소 연령", example = "3")
-    @field:Min(0)
-    val minAge: Int,
 
-    @Schema(description = "케어 가능 최대 연령", example = "5")
-    @field:Min(0)
-    val maxAge: Int,
-
-    @Schema(description = "자기소개", example = "아이를 좋아하는 교육학과 학생입니다.")
-    val introduction: String
-)
-
-data class ParentInfoRequest(
-    @Schema(description = "아이 정보 목록")
-    val children: List<ChildRequest>
-)
-
-data class ChildRequest(
-
-    @Schema(description = "아이 이름", example = "박아기")
-    @field:NotBlank
-    val name: String,
-
-    @Schema(description = "생년월일", example = "2020-01-01")
-    val birthDate: LocalDate,
-
-    @Schema(description = "성별", example = "MALE")
-    val gender: Gender
-)
