@@ -70,4 +70,21 @@ open class Child protected constructor() {
         }
     }
 
+
+    fun update(name: String?, birthDate: LocalDate?, gender: Gender?) {
+        name?.let {
+            require(it.isNotBlank()) { "아이 이름은 비어 있을 수 없습니다." }
+            this.name = it
+        }
+
+        birthDate?.let {
+            this.birthDate = it
+        }
+
+        gender?.let {
+            this.gender = it
+        }
+    }
+
+
 }
