@@ -67,6 +67,14 @@ open class Child protected constructor() {
             require(name.isNotBlank()) { "아이 이름은 비어있을 수 없습니다." }
             return Child(parentProfile, name, birthDate, gender)
         }
+        fun create(name: String, birthDate: LocalDate, gender: Gender): Child {
+            require(name.isNotBlank()) { "아이 이름은 비어있을 수 없습니다." }
+            val child = Child()
+            child.name = name
+            child.birthDate = birthDate
+            child.gender = gender
+            return child
+        }
     }
 
 

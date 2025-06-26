@@ -1,14 +1,17 @@
 package com.momsitter.presentation.child.controller
 
+import com.momsitter.application.child.dto.CreateChildCommand
 import com.momsitter.application.child.dto.UpdateChildCommand
 import com.momsitter.application.child.sevice.ChildService
 import com.momsitter.common.CustomApiResponse
+import com.momsitter.presentation.child.dto.request.CreateChildRequest
 import com.momsitter.presentation.child.dto.request.UpdateChildRequest
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
@@ -18,6 +21,19 @@ import org.springframework.web.bind.annotation.RestController
 class ChildController (
     private val childService: ChildService
 ): ChildAPI{
+
+    @PostMapping
+    override fun createChild(
+        request: HttpServletRequest,
+        requestDto: CreateChildRequest
+    ): ResponseEntity<CustomApiResponse<Long>> {
+        val userId = request.getAttribute("userId") as Long
+        val childId = childService.createChild(
+            CreateChildCommand.of(userId = userId, requestDto = requestDto)
+        )
+        return ResponseEntity.ok(CustomApiResponse.success(childId, "자녀 정보가 등록되었습니다."))
+    }
+
 
     @PatchMapping("/{childId}/profile")
     override fun updateChild(

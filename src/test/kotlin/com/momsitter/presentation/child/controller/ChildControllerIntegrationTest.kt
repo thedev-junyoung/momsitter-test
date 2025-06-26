@@ -2,9 +2,12 @@ package com.momsitter.presentation.child.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.momsitter.domain.user.Gender
+import com.momsitter.domain.user.UserRepository
+import com.momsitter.presentation.child.dto.request.CreateChildRequest
 import com.momsitter.presentation.child.dto.request.UpdateChildRequest
 import com.momsitter.support.TestDataCleaner
 import com.momsitter.support.TestLoginHelper
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -16,6 +19,7 @@ import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.patch
+import org.springframework.test.web.servlet.post
 import java.time.LocalDate
 
 @SpringBootTest
@@ -23,15 +27,60 @@ import java.time.LocalDate
 @Import(TestLoginHelper::class)
 class ChildProfileControllerIntegrationTest {
 
-    @Autowired lateinit var mockMvc: MockMvc
-    @Autowired lateinit var objectMapper: ObjectMapper
-    @Autowired lateinit var testLoginHelper: TestLoginHelper
-    @Autowired lateinit var testDataCleaner: TestDataCleaner
+    @Autowired
+    lateinit var mockMvc: MockMvc
+
+    @Autowired
+    lateinit var objectMapper: ObjectMapper
+
+    @Autowired
+    lateinit var testLoginHelper: TestLoginHelper
+
+    @Autowired
+    lateinit var testDataCleaner: TestDataCleaner
+
+    @Autowired
+    lateinit var userRepository: UserRepository
 
     @AfterEach
     fun cleanUp() {
         testDataCleaner.deleteUserCascade("parent123")
     }
+    @Nested
+    @DisplayName("자녀 등록")
+    inner class CreateChild {
+
+        @Test
+        @DisplayName("부모 유저가 자녀 등록에 성공한다")
+        fun create_child_successfully() {
+            // given
+            val username = "parentWithChild"
+            val password = "child123!"
+            val userId = testLoginHelper.createAndSaveParentUser(username, password)
+            val token = testLoginHelper.getAccessToken(username, password)
+
+            val request = CreateChildRequest(
+                name = "박아기",
+                birthDate = LocalDate.of(2020, 1, 1),
+                gender = Gender.FEMALE
+            )
+
+            // when
+            val result = mockMvc.post("/api/v1/child") {
+                header("Authorization", "Bearer $token")
+                contentType = MediaType.APPLICATION_JSON
+                content = objectMapper.writeValueAsString(request)
+            }.andExpect {
+                status { isOk() }
+            }.andReturn()
+
+            // then
+            val responseJson = objectMapper.readTree(result.response.contentAsString)
+            val responseData = responseJson["status"].asText()
+            assertThat(responseData).isEqualTo("SUCCESS")
+        }
+    }
+
 
     @Nested
     @DisplayName("자녀 정보 수정")
