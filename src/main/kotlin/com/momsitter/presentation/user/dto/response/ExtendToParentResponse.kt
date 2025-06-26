@@ -1,7 +1,6 @@
 package com.momsitter.presentation.user.dto.response
 
 import com.momsitter.application.user.dto.result.ExtendToParentResult
-import com.momsitter.domain.user.UserRole
 import com.momsitter.domain.user.UserRoleType
 import io.swagger.v3.oas.annotations.media.Schema
 

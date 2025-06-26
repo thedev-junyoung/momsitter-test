@@ -3,7 +3,6 @@ package com.momsitter.presentation.child.dto.request
 
 import com.momsitter.domain.user.Gender
 import io.swagger.v3.oas.annotations.media.Schema
-import jakarta.validation.constraints.AssertTrue
 import java.time.LocalDate
 
 data class UpdateChildRequest(
@@ -17,8 +16,5 @@ data class UpdateChildRequest(
     val gender: Gender? = null,
 ) {
 
-    @AssertTrue(message = "이름이 빈 문자열일 수는 없습니다.")
-    fun isNameValid(): Boolean {
-        return name == null || name.isNotBlank()
-    }
+
 }

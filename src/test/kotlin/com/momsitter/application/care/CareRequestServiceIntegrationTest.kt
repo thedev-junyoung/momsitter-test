@@ -5,8 +5,6 @@ import com.momsitter.application.care.dto.UpdateCareRequestCommand
 import com.momsitter.domain.care.CareRequestRepository
 import com.momsitter.domain.user.Gender
 import com.momsitter.domain.user.TestUserFactory
-import com.momsitter.domain.user.User
-import com.momsitter.domain.user.UserRoleType
 import com.momsitter.domain.user.UserRepository
 import com.momsitter.support.TestDataCleaner
 import org.assertj.core.api.Assertions.assertThat

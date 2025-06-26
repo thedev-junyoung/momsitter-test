@@ -1,8 +1,6 @@
 package com.momsitter.application.user.dto.result
 
-import com.momsitter.application.user.dto.result.ExtendToParentResult.ParentProfileResult
 import com.momsitter.domain.user.User
-import com.momsitter.domain.user.UserRole
 import com.momsitter.domain.user.UserRoleType
 
 data class ExtendToSitterResult(

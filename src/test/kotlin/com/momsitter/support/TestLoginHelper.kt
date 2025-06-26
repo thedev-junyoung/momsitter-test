@@ -2,12 +2,9 @@ package com.momsitter.support
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.momsitter.domain.PasswordEncoder
-import com.momsitter.domain.sitter.SitterProfileInfo
 import com.momsitter.domain.user.Gender
 import com.momsitter.domain.user.TestUserFactory
-import com.momsitter.domain.user.User
 import com.momsitter.domain.user.UserRepository
-import com.momsitter.domain.user.UserRoleType
 import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc

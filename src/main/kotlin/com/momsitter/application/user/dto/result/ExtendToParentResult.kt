@@ -2,7 +2,6 @@ package com.momsitter.application.user.dto.result
 
 import com.momsitter.domain.child.Child
 import com.momsitter.domain.user.User
-import com.momsitter.domain.user.UserRole
 import com.momsitter.domain.user.UserRoleType
 import java.time.LocalDate
 
